@@ -2,59 +2,83 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\Admin\CreateResource;
-use App\Http\Resources\TestCollection;
-use App\Http\Resources\TestResource;
 use App\Repositories\TestRepository;
-use Illuminate\Http\Request;
+use App\Repositories\UserRepository;
+use Illuminate\Support\Facades\App;
+
+// use App\Http\Resources\Admin\CreateResource;
+// use App\Http\Resources\TestCollection;
+// use App\Http\Resources\TestResource;
+// use App\Repositories\TestRepository;
+// use Illuminate\Http\Request;
 
 class TestController extends Controller
 {
-    protected $testRepository;
+    // protected $testRepository;
+    protected $userRepository;
 
-    public function __construct(TestRepository $testRepo)
+    public function __construct(UserRepository $userRepository, TestRepository $testRepository)
     {
-        $this->testRepository = $testRepo;
+        $this->userRepository = $userRepository;
     }
 
-    public function index(Request $request)
+    // public function __construct(TestRepository $testRepo)
+    // {
+    //     $this->testRepository = $testRepo;
+    // }
+
+    // public function index(Request $request)
+    // {
+    //     return responseOK(["test" => "ok"]);
+    // }
+
+
+    // public function show($id)
+    // {
+    //     $test = $this->testRepository->findOrFail($id);
+    //     return responseOK(new TestResource($test));
+    // }
+
+    // public function store(CreateRequest $request)
+    // {
+    //     $requestData = $request->only([
+
+    //         'name',
+    //         'ad_cd',
+    //         'registration_user_type_id',
+    //         'operator_id'
+    //     ]);
+    //     $test = $this->testRepository->store($requestData);
+    //     return responseCreated(new CreateResource($test));
+    // }
+
+    // public function update($id, UpdateRequest $request)
+    // {
+    //     $test = $this->testRepository->findOrFail($id);
+    //     $this->authorize('update', $test);
+    //     $requestData = $request->only(['name', 'ad_cd', 'registration_user_type_id']);
+    //     $this->testRepository->update($test, $requestData);
+    //     return responseUpdatedOrDeleted();
+    // }
+
+    // public function delete($id)
+    // {
+    //     $test = $this->testRepository->findOrFail($id);
+    //     $this->testRepository->delete($test);
+    //     return responseUpdatedOrDeleted();
+    // }
+
+    public function test()
     {
-        return responseOK(["test" => "ok"]);
-    }
-
-
-    public function show($id)
-    {
-        $test = $this->testRepository->findOrFail($id);
-        return responseOK(new TestResource($test));
-    }
-
-    public function store(CreateRequest $request)
-    {
-        $requestData = $request->only([
-
-            'name',
-            'ad_cd',
-            'registration_user_type_id',
-            'operator_id'
-        ]);
-        $test = $this->testRepository->store($requestData);
-        return responseCreated(new CreateResource($test));
-    }
-
-    public function update($id, UpdateRequest $request)
-    {
-        $test = $this->testRepository->findOrFail($id);
-        $this->authorize('update', $test);
-        $requestData = $request->only(['name', 'ad_cd', 'registration_user_type_id']);
-        $this->testRepository->update($test, $requestData);
-        return responseUpdatedOrDeleted();
-    }
-
-    public function delete($id)
-    {
-        $test = $this->testRepository->findOrFail($id);
-        $this->testRepository->delete($test);
-        return responseUpdatedOrDeleted();
+        $users = $this->userRepository->getAllUser();
+        return (json_encode($users));
+        
+        
+        foreach ($users as $user) {
+            $roles = $user->roles; // = 1 query
+            foreach ($roles as $role) {
+                dd($role->name);
+            }
+        }
     }
 }

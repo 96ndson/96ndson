@@ -130,7 +130,7 @@ abstract class BaseRepository
      * @param $id
      * @return mixed
      */
-    public function findOrBad($id)
+    /* public function findOrBad($id)
     {
         try {
             $result = $this->model->findOrFail($id);
@@ -139,7 +139,7 @@ abstract class BaseRepository
         }
 
         return $result;
-    }
+    } */
 
     /**
      * Get first

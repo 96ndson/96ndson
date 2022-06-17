@@ -36,7 +36,7 @@ class UserRepository extends BaseRepository
         //     }
         // ]);
 
-        $roleStaff = $this->model::STAFF;
+        $roleStaff = User::STAFF;
         return $this->model
             ->with([
                 'roles' => function ($query) use ($date, $date_1) {
@@ -44,7 +44,7 @@ class UserRepository extends BaseRepository
                 },
                 'userRole' => function ($query) {
                     //
-                    // $query->where('user_roles.');
+                    // $query->where('user_roles.')->where();
                 }
             ])
             ->whereHas('roles', function ($query) use ($roleStaff) {

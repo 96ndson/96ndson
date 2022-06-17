@@ -159,7 +159,7 @@ function timeRangeArray($from, $to, $format = 'Y-m-d H:i:s')
     return $dateArr;
 }
 
-function respondWithToken($token, $type = 'api', $refreshToken = null, $user = null)
+/* function respondWithToken($token, $type = 'api', $refreshToken = null, $user = null)
 {
     $response = [
         'access_token' => $token,
@@ -176,6 +176,6 @@ function respondWithToken($token, $type = 'api', $refreshToken = null, $user = n
     }
 
     return responseCreated($response);
-}
+} */
 
 

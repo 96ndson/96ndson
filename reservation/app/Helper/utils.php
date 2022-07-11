@@ -1,8 +1,7 @@
 <?php
-
-use App\Helper\Constant;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 function formatException($exception)
@@ -44,15 +43,15 @@ function responseBadRequest($message)
     return response()->json(['message' => $message], 400);
 }
 
-function responseNotFound($message)
+function responseNotFound()
 {
-    return response()->json(['message' => $message], 404);
+    return response()->json(['message' => trans('auth.failed')], 404);
 }
 
-function responseValidate($errors, $message = 'The given data was invalid.')
+function responseValidate($errors)
 {
     $output = [
-        'message' => $message,
+        'message' => trans('auth.validate'),
         'errors' => $errors
     ];
     return response()->json($output, 422);
@@ -159,12 +158,12 @@ function timeRangeArray($from, $to, $format = 'Y-m-d H:i:s')
     return $dateArr;
 }
 
-/* function respondWithToken($token, $type = 'api', $refreshToken = null, $user = null)
+function respondWithToken($token, $type = 'api', $refreshToken = null, $user = null)
 {
     $response = [
         'access_token' => $token,
         'token_type' => 'bearer',
-        'expires_in' => auth('api')->factory()->getTTL() * 60,
+        'expires_in' => Auth::factory()->getTTL() * 60,
     ];
     if ($refreshToken) {
         $response['refresh_token'] = $refreshToken;
@@ -176,6 +175,6 @@ function timeRangeArray($from, $to, $format = 'Y-m-d H:i:s')
     }
 
     return responseCreated($response);
-} */
+}
 
 

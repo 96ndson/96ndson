@@ -31,7 +31,8 @@ class AuthController extends Controller
             "password" => $request->input('password')
         ];
         if (! $token = auth()->attempt($data)) {
-            return responseNotFound();
+            $message = trans('auth.failed');
+            return responseNotFound($message);
         }
         return respondWithToken($token);
     }

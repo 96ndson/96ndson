@@ -43,9 +43,9 @@ function responseBadRequest($message)
     return response()->json(['message' => $message], 400);
 }
 
-function responseNotFound()
+function responseNotFound($message)
 {
-    return response()->json(['message' => trans('auth.failed')], 404);
+    return response()->json(['message' => $message], 404);
 }
 
 function responseValidate($errors)

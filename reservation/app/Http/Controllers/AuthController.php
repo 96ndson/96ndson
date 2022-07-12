@@ -4,12 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ValidationLogin;
+use App\Repositories\AuthRepository;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\User;
 use App\Http\Requests\ValidationRegister;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
-use Tymon\JWTAuth\JWT;
 
 class AuthController extends Controller
 {
@@ -18,24 +18,22 @@ class AuthController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    protected $authRepository;
+
+    public function __construct(AuthRepository $AuthRepository)
     {
+        $this->authRepository = $AuthRepository;
         $this->middleware('auth:api', ['except' => ['login', 'register']]);
     }
 
-    public function register(ValidationRegister $request)
-    {
-
-        $user = User::create([
+    public function register(ValidationRegister $request){
+        $data = [
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password)
-
-        ]);
-        return response()->json([
-            'message' => 'user created',
-            'user' => $user
-        ]);
+        ];
+        $user = $this->authRepository->create($data);
+        return responseCreated($user);
     }
 
     /**
@@ -45,13 +43,12 @@ class AuthController extends Controller
      */
     public function login(ValidationLogin $request)
     {
-        $credentials = $request->all();
+        $credentials = request(['email', 'password']);
 
-        if (! $token = JWTAuth::attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+        if (!$token = JWTAuth::attempt($credentials)) {
+            return responseNotFound(['error' => 'Unauthorized']);
         }
-
-        return $this->respondWithToken($token);
+        return respondWithToken($token);
     }
 
     /**
@@ -93,12 +90,12 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function respondWithToken($token)
-    {
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => config('jwt.ttl')
-        ]);
-    }
+//    protected function respondWithToken($token)
+//    {
+//        return response()->json([
+//            'access_token' => $token,
+//            'token_type' => 'bearer',
+//            'expires_in' => config('jwt.ttl')
+//        ]);
+//    }
 }

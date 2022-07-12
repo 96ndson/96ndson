@@ -4,6 +4,7 @@ use App\Helper\Constant;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 function formatException($exception)
 {
@@ -170,7 +171,7 @@ function respondWithToken($token, $type = 'api', $refreshToken = null, $user = n
         $response['refresh_token'] = $refreshToken;
     }
     if ($type === 'api') {
-        $response['user'] = $user ? $user : auth('api')->user();
+        $response['user'] = $user ? $user : Auth::user();
     } else {
         $response[$type] = $user ? $user : auth($type)->user();
     }

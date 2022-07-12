@@ -14,10 +14,10 @@ use Illuminate\Support\Facades\App;
 
 class TestController extends Controller
 {
-    // protected $testRepository;
+//     protected $testRepository;
     protected $userRepository;
 
-    public function __construct(UserRepository $userRepository, TestRepository $testRepository)
+    public function __construct(UserRepository $userRepository)
     {
         $this->userRepository = $userRepository;
     }
@@ -70,15 +70,15 @@ class TestController extends Controller
 
     public function test()
     {
-        $users = $this->userRepository->getAllUser();
+        $users = $this->userRepository->getAll();
         return (json_encode($users));
-        
-        
-        foreach ($users as $user) {
-            $roles = $user->roles; // = 1 query
-            foreach ($roles as $role) {
-                dd($role->name);
-            }
-        }
+
+
+//        foreach ($users as $user) {
+//            $roles = $user->roles; // = 1 query
+//            foreach ($roles as $role) {
+//                dd($role->name);
+//            }
+//        }
     }
 }

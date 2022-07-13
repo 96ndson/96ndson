@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ValidationLogin;
-use App\Repositories\AuthRepository;
+use App\Repositories\UserRepository;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\User;
 use App\Http\Requests\ValidationRegister;
@@ -20,10 +20,9 @@ class AuthController extends Controller
      */
     protected $authRepository;
 
-    public function __construct(AuthRepository $AuthRepository)
+    public function __construct(UserRepository $AuthRepository)
     {
         $this->authRepository = $AuthRepository;
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
     }
 
     public function register(ValidationRegister $request){
@@ -70,7 +69,7 @@ class AuthController extends Controller
     {
         auth()->logout();
 
-        return response()->json(['message' => 'Successfully logged out']);
+        return responseOK(['message' => 'Successfully logged out']);
     }
 
     /**
@@ -82,20 +81,4 @@ class AuthController extends Controller
     {
         return $this->respondWithToken(auth()->refresh());
     }
-
-    /**
-     * Get the token array structure.
-     *
-     * @param string $token
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-//    protected function respondWithToken($token)
-//    {
-//        return response()->json([
-//            'access_token' => $token,
-//            'token_type' => 'bearer',
-//            'expires_in' => config('jwt.ttl')
-//        ]);
-//    }
 }

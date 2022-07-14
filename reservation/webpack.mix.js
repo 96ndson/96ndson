@@ -1,3 +1,4 @@
+const path = require('path')
 const mix = require('laravel-mix');
 
 /*
@@ -12,6 +13,22 @@ const mix = require('laravel-mix');
  */
 
 mix.js('resources/js/app.js', 'public/js')
-    .postCss('resources/css/app.css', 'public/css', [
-        //
-    ]);
+  .vue({ version: 2 })
+  .postCss('resources/css/app.css', 'public/css', [
+    //
+  ]).version();
+
+mix.webpackConfig({
+  plugins: [
+    // new BundleAnalyzerPlugin()
+  ],
+  resolve: {
+    extensions: ['.js', '.json', '.vue'],
+    alias: {
+      '@': path.join(__dirname, './resources/js')
+    }
+  },
+  output: {
+    chunkFilename: 'js/[name].[chunkhash].js'
+  }
+})

@@ -10,24 +10,15 @@ class UserController extends Controller
 {
     protected $userRepository;
 
-    public function __construct(UserRepository $UserRepository)
+    public function __construct(UserRepository $userRepository)
     {
-        $this->userRepository = $UserRepository;
+        $this->userRepository = $userRepository;
     }
-//    public function register(ValidationRegister $request)
-//    {
-//        $data = [
-//            'name' => $request->name,
-//            'email' => $request->email,
-//            'password' => bcrypt($request->password)
-//        ];
-//        $user = $this->userRepository->create($data);
-//    }
     public function login(ValidationLogin $request)
     {
         $credentials = request(['email', 'password']);
         if (!$token = auth()->attempt($credentials)) {
-            return responseNotFound(['error' => 'Unauthorized']);
+            return responseNotFound(['error' => trans('auth.failed')]);
         }
         return respondWithToken($token);
     }
@@ -39,6 +30,6 @@ class UserController extends Controller
     {
         auth()->logout();
 
-        return responseOK(['message' => 'Successfully logged out']);
+        return responseOK(['message' => trans('auth.logout')]);
     }
 }

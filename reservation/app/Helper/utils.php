@@ -49,7 +49,7 @@ function responseNotFound($message)
     return response()->json(['message' => $message], 404);
 }
 
-function responseValidate($errors, $message = 'The given data was invalid.')
+function responseValidate($errors, $message = '')
 {
     $output = [
         'message' => $message,

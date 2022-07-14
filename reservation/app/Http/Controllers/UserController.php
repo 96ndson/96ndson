@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginRequest;
 use App\Repositories\UserRepository;
-use Illuminate\Http\Request;
-use App\Http\Requests\ValidationLogin;
 
 class UserController extends Controller
 {
@@ -14,10 +13,13 @@ class UserController extends Controller
     {
         $this->userRepository = $userRepository;
     }
-    public function login(ValidationLogin $request)
+    public function login(LoginRequest $request)
     {
-        $credentials = request(['email', 'password']);
-        if (!$token = auth()->attempt($credentials)) {
+        $data = [
+            'email' => $request->input('email'),
+            'password' => $request->input('password')
+        ];
+        if (!$token = auth()->attempt($data)) {
             return responseNotFound(['error' => trans('auth.failed')]);
         }
         return respondWithToken($token);

@@ -159,21 +159,21 @@ function timeRangeArray($from, $to, $format = 'Y-m-d H:i:s')
     return $dateArr;
 }
 
-// function respondWithToken($token, $type = 'api', $refreshToken = null, $user = null)
-// {
-//     $response = [
-//         'access_token' => $token,
-//         'token_type' => 'bearer',
-//         'expires_in' => auth('api')->factory()->getTTL() * 60,
-//     ];
-//     if ($refreshToken) {
-//         $response['refresh_token'] = $refreshToken;
-//     }
-//     if ($type === 'api') {
-//         $response['user'] = $user ? $user : auth('api')->user();
-//     } else {
-//         $response[$type] = $user ? $user : auth($type)->user();
-//     }
+function respondWithToken($token, $type = 'api', $refreshToken = null, $user = null)
+{
+    $response = [
+        'access_token' => $token,
+        'token_type' => 'bearer',
+        'expires_in' => auth('api')->factory()->getTTL() * 60,
+    ];
+    if ($refreshToken) {
+        $response['refresh_token'] = $refreshToken;
+    }
+    if ($type === 'api') {
+        $response['user'] = $user ? $user : auth('api')->user();
+    } else {
+        $response[$type] = $user ? $user : auth($type)->user();
+    }
 
-//     return responseCreated($response);
-// }
+    return responseCreated($response);
+}

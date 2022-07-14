@@ -20,7 +20,6 @@ class UserRepository extends BaseRepository
         // User::where('created_at', '>=', now())->get();
     }
 
-
     public function getAllUser()
     {
         // with = load khác vị trí sd

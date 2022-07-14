@@ -130,16 +130,16 @@ abstract class BaseRepository
      * @param $id
      * @return mixed
      */
-    /* public function findOrBad($id)
-    {
-        try {
-            $result = $this->model->findOrFail($id);
-        } catch (\Exception $e) {
-            throw new BadRequestException($this->msgNotFound, 0);
-        }
+    // public function findOrBad($id)
+    // {
+    //     try {
+    //         $result = $this->model->findOrFail($id);
+    //     } catch (\Exception $e) {
+    //         throw new BadRequestException($this->msgNotFound, 0);
+    //     }
 
-        return $result;
-    } */
+    //     return $result;
+    // } 
 
     /**
      * Get first

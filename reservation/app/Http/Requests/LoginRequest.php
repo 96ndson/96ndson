@@ -23,6 +23,7 @@ class LoginRequest extends FormRequest
 
     public function failedValidation(Validator $validator)
     {
-        throw new HttpResponseException(responseValidate($validator->errors()));
+        $message = trans('auth.validate');
+        throw new HttpResponseException(responseValidate($validator->errors(),$message));
     }
 }

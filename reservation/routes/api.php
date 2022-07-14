@@ -19,7 +19,7 @@ use App\Http\Controllers\UserController;
 //    return $request->user();
 //});
 Route::group([
-    'middleware' => 'api',
+    'middleware' => 'auth:api',
     'prefix' => 'auth'
 
 ], function ($router) {

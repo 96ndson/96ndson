@@ -3,6 +3,7 @@
 use App\Helper\Constant;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 function formatException($exception)
@@ -164,7 +165,7 @@ function respondWithToken($token, $type = 'api', $refreshToken = null, $user = n
     $response = [
         'access_token' => $token,
         'token_type' => 'bearer',
-        'expires_in' => auth('api')->factory()->getTTL() * 60,
+        'expires_in' => Auth::factory()->getTTL() * 60,
     ];
     if ($refreshToken) {
         $response['refresh_token'] = $refreshToken;

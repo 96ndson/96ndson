@@ -13,10 +13,10 @@ return [
     |
     */
 
-    'failed' => 'These credentials do not match our records.',
+    'failed' => 'Tài khoản không tồn tại',
     'password' => 'The provided password is incorrect.',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
-    'logout' => 'Log out successfully',
-    'validate' => 'Form input is invalid'
+    'logout' => 'Đăng xuất thành công',
+    'validate' => 'Thông tin nhập vào không hợp lệ'
 
 ];

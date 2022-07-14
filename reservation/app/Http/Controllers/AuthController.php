@@ -23,7 +23,7 @@ class AuthController extends Controller
             'password' => $request->password
         ];
         if (!$token = auth()->attempt($data)) {
-            return responseError(['error' => 'Unauthorized'], 401);
+            return responseNotFound(['error' => __('auth.failed')], 401);
         }
         return respondWithToken($token);
     }
@@ -32,7 +32,7 @@ class AuthController extends Controller
     public function logout()
     {
         auth()->logout();
-        return responseOK(['message' => 'User successfully signed out']);
+        return responseOK(['message' => __('auth.logout')]);
     }
 
 }

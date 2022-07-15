@@ -14,6 +14,7 @@ class UserController extends Controller
     {
         $this->userRepository = $userRepository;
     }
+
     public function login(ValidationLogin $request)
     {
         $credentials = request(['email', 'password']);
@@ -22,10 +23,12 @@ class UserController extends Controller
         }
         return respondWithToken($token);
     }
+
     public function userProfile()
     {
         return responseOK(auth()->user());
     }
+
     public function logout()
     {
         auth()->logout();

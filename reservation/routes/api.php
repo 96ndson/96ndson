@@ -19,11 +19,16 @@ use App\Http\Controllers\UserController;
 //    return $request->user();
 //});
 Route::group([
-    'middleware' => 'api',
+    'middleware' => 'auth:api',
     'prefix' => 'auth'
 
 ], function ($router) {
-    Route::post('/login', [UserController::class, 'login']);
     Route::post('/logout', [UserController::class, 'logout']);
     Route::get('/user-profile', [UserController::class, 'userProfile']);
+});
+
+Route::group([
+    'prefix' => 'auth'
+], function ($router) {
+Route::post('/login', [UserController::class, 'login']);
 });

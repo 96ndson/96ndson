@@ -30,5 +30,5 @@ Route::group([
 Route::group([
     'prefix' => 'auth'
 ], function ($router) {
-Route::post('/login', [UserController::class, 'login']);
+    Route::post('/login', [UserController::class, 'login']);
 });

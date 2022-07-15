@@ -6,15 +6,15 @@
           <h1 class="text-center">Đăng nhập</h1>
           <b-form-group label="Email address:">
             <b-form-input
-            v-model="form.email"
-            type="email" placeholder="Enter email">
+              v-model="form.email"
+              type="email" placeholder="Enter email">
             </b-form-input>
           </b-form-group>
 
           <b-form-group label="Password:">
             <b-form-input 
-            v-model="form.password"
-            type="password" placeholder="Enter password">
+              v-model="form.password"
+              type="password" placeholder="Enter password">
             </b-form-input>
           </b-form-group>
 

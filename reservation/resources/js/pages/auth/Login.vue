@@ -45,7 +45,7 @@ export default {
 
 <style scope>
 body{
-  background: url('../../../images/nha-hang-dep-view-cao.jpg');
+  background: url('@/assets/images/nha-hang-dep-view-cao.jpg');
   background-repeat: no-repeat;
   background-position: center;
   width: 100%;

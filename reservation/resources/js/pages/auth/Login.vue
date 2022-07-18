@@ -14,12 +14,12 @@
                   }">
                 </b-form-input>
                 <div class="valid-feedback">
-                  {{ message.IS_VALID("Email") }}
+                  {{ message.EMAIL_IS_VALID }}
                 </div>
                 <div class="invalid-feedback">
-                  <span v-if="!$v.form.email.required" >{{ message.IS_REQUIRED("Email") }}</span>
-                  <span v-if="$v.form.email.minLength && !$v.form.email.email">{{ message.INCORRECT_FORM("Email") }}</span>
-                  <span v-if="!$v.form.email.minLength" >{{ message.HAVE_AT_LEAST("Email", $v.form.email.$params.minLength.min) }}.</span>
+                  <span v-if="!$v.form.email.required" >{{ message.EMAIL_IS_REQUIRED }}</span>
+                  <span v-if="!$v.form.email.minLength" >{{ message.haveAtLeast("Email", $v.form.email.$params.minLength.min) }}.</span>
+                  <span v-if="$v.form.email.minLength && !$v.form.email.email">{{ message.INCORRECT_EMAIL_FORMAT }}</span>
                 </div>
               </b-form-group>
               <b-form-group description="Enter your password" label="Password">
@@ -31,12 +31,11 @@
                   }">
                 </b-form-input>
                 <div class="valid-feedback">
-                  {{ message.IS_VALID("Password") }}
+                  {{ message.PASSWORD_IS_VALID}}
                 </div>
                 <div class="invalid-feedback">
-                  <span v-if="!$v.form.password.required" >{{ message.IS_REQUIRED("Password") }}</span>
-                  <span v-if="$v.form.password.minLength && !$v.form.password.email">{{ message.INCORRECT_FORM("Password") }}</span>
-                  <span v-if="!$v.form.password.minLength" >{{ message.HAVE_AT_LEAST("Password", $v.form.password.$params.minLength.min) }}.</span>
+                  <span v-if="!$v.form.password.required" >{{ message.PASSWORD_IS_REQUIRED }}</span>
+                  <span v-if="!$v.form.password.minLength" >{{ message.haveAtLeast("Password", $v.form.password.$params.minLength.min) }}.</span>
                 </div>
               </b-form-group>
               <b-form-group>
@@ -52,8 +51,9 @@
 
 <script>
 import { required, minLength, email } from 'vuelidate/lib/validators';
-import { IS_VALID, IS_REQUIRED, INCORRECT_FORM, HAVE_AT_LEAST } 
-from '../../constant/validate';
+import { haveAtLeast } from '@/helpers/functions';
+import { EMAIL_IS_VALID, PASSWORD_IS_VALID, EMAIL_IS_REQUIRED, PASSWORD_IS_REQUIRED, INCORRECT_EMAIL_FORMAT } 
+from '@/helpers/message';
 export default {
   name: 'login',
   data() {
@@ -63,10 +63,12 @@ export default {
         password: ''
       },
       message: {
-        IS_VALID,
-        IS_REQUIRED,
-        INCORRECT_FORM,
-        HAVE_AT_LEAST,
+        EMAIL_IS_VALID,
+        PASSWORD_IS_VALID,
+        EMAIL_IS_REQUIRED,
+        PASSWORD_IS_REQUIRED,
+        INCORRECT_EMAIL_FORMAT,
+        haveAtLeast,
       }
     }
   },
@@ -81,6 +83,11 @@ export default {
         required,
         minLength: minLength(8)
       }
+    }
+  },
+  methods: {
+    onSubmit() {
+      console.log("Form: ",this.form);
     }
   }
 }

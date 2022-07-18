@@ -23,6 +23,8 @@
         "vue": "^2.7.5",
         "vue-axios": "^3.4.1",
         "vue-router": "^3.5.2",
+        "vuelidate": "^0.7.6",
+        "vuelidate-error-extractor": "^2.4.1",
         "vuex": "^3.6.2"
     }
 }

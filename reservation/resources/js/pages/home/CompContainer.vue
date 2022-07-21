@@ -92,12 +92,12 @@
         <div class="body__seattype">
           <font-awesome-icon icon="fa-solid fa-chair" class="body__booking-1-icon1" />
           <div class="body__seattype--group">
-            <label class="body__seattype-radio">Any</label>
-            <label class="body__seattype-radio">Table</label>
-            <label class="body__seattype-radio">Counter</label>
-            <label class="body__seattype-radio">Outside</label>
-            <label class="body__seattype-radio">Semi-Private</label>
-            <label class="body__seattype-radio">Tatami</label>
+            <label class="body__seattype-radio margin-bottom ">Any</label>
+            <label class="body__seattype-radio margin-bottom">Table</label>
+            <label class="body__seattype-radio margin-bottom">Counter</label>
+            <label class="body__seattype-radio margin-bottom">Outside</label>
+            <label class="body__seattype-radio margin-bottom">Semi-Private</label>
+            <label class="body__seattype-radio margin-bottom">Tatami</label>
           </div>
 
         </div>
@@ -134,30 +134,34 @@
             · DUCK SALAD sliced breast of duck, eggplant, watercress, lime-anchovy dressing
             <br>
             <br>
-            ■ Main dish (Choose one dish from these items)
-            <br>
-            · FISH OF THE DAY
-            <br>
-            · LOBSTER RISOTTO tomato sauce, parmigiano reggiano　(+600)
-            <br>
-            · SAUTEED PORK BELLY poached egg, white wine braised shiitake mushrooms
-            <br>
-            · LAMB & EGGPLANT “ MOUSSAKKA” minced lamb, eggplant, blue cheese gratine, potatoes, cumin
-            <br>
-            · ROASTED CHICKEN “POLPETTA” braised mushrooms, piperade sauce
-            <br>
-            ■ Dessert (Choose one dish from these items)
-            <br>
-            · GINGER & LIME MOUSSE
-            <br>
-            · FIG TARTE gorgonzola, port & black currant sauce
-            <br>
-            · HOUSE-MADE YOGURT granola - almonds, coconuts, dried cranberries
-            <br>
-            · TODAY’S ICE CREAM
-            <br>
-            <br>
-            ■ Coffee or Tea
+            <span id="dots">...</span><span id="more">
+              <br>
+              ■ Main dish (Choose one dish from these items)
+              <br>
+              · FISH OF THE DAY
+              <br>
+              · LOBSTER RISOTTO tomato sauce, parmigiano reggiano　(+600)
+              <br>
+              · SAUTEED PORK BELLY poached egg, white wine braised shiitake mushrooms
+              <br>
+              · LAMB & EGGPLANT “ MOUSSAKKA” minced lamb, eggplant, blue cheese gratine, potatoes, cumin
+              <br>
+              · ROASTED CHICKEN “POLPETTA” braised mushrooms, piperade sauce
+              <br>
+              ■ Dessert (Choose one dish from these items)
+              <br>
+              · GINGER & LIME MOUSSE
+              <br>
+              · FIG TARTE gorgonzola, port & black currant sauce
+              <br>
+              · HOUSE-MADE YOGURT granola - almonds, coconuts, dried cranberries
+              <br>
+              · TODAY’S ICE CREAM
+              <br>
+              <br>
+              ■ Coffee or Tea
+            </span>
+            <button @click="myFunction()" id="myBtn" style="display: block;">Read more</button>
           </div>
           <div class="body__menu-content-print block">
             <div class="body__menu-content-print-label">Fine Print</div>
@@ -170,12 +174,12 @@
             <br>
             Meals LunchOrder Limit 2 ~ 6
           </div>
+          
         </div>
         <div class="body__menu-price">
           <span>¥ 2,200 </span><span>(Tax Excl.)</span>
           <button class="btn-block" style="display: block;">Select</button>
         </div>
-
       </div>
       <div class="body_menu2">
         <div class="body_menu2-name">
@@ -263,6 +267,7 @@
 import BackToTop from 'vue-backtotop'
 import CompTable from '@/components/reservation/CompTable.vue'
 
+
 export default {
   name: 'Comp-Container',
   components: {
@@ -277,6 +282,21 @@ export default {
   methods: {
     addTable() {
       this.selectedComponent = true;
+    },
+    myFunction() {
+      var dots = document.getElementById("dots");
+      var moreText = document.getElementById("more");
+      var btnText = document.getElementById("myBtn");
+
+      if (dots.style.display === "none") {
+        dots.style.display = "inline";
+        btnText.innerHTML = "Read more";
+        moreText.style.display = "none";
+      } else {
+        dots.style.display = "none";
+        btnText.innerHTML = "Read less";
+        moreText.style.display = "inline";
+      }
     }
 
   }
@@ -284,4 +304,5 @@ export default {
 </script>
 
 <style scoped>
+
 </style>

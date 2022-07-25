@@ -1,5 +1,6 @@
 <template>
   <div class="wrapper">
+    <a href="#" v-on:click="calendarMethods">CCCCCCCCCCCCCCCCCCCC</a>
     <div class="header d-flex justify-content-between">
       <div class="navbar-brand">
         <img
@@ -11,7 +12,7 @@
           <ul class="navbar-nav mr-auto">
             <li class="nav-item">
               <a class="nav-link" href="#">
-                <font-awesome-icon class="nav-icon" icon="fa-solid fa-circle-question" />
+                <font-awesome-icon class="nav-icon" icon="fa-solid fa-circle-question"/>
                 Help</a>
             </li>
             <div class="nav-item nav-item-dropdown">
@@ -117,7 +118,8 @@
                   <div
                     class="form-group-booking input-group-icn res-widget-col col-sm-4 error-parent-no-tooltip input-group">
                     <font-awesome-icon class="form-group-booking-icon" icon="user-large"/>
-                    <select v-on:change="showCalendar" name="" id="" class="form-control form-group-booking-input-danger alert-danger">
+                    <select v-on:change="showCalendar" name="" id=""
+                            class="form-control form-group-booking-input-danger alert-danger">
                       <option>-- Adults --</option>
                       <option value="1">1</option>
                       <option value="2">2</option>
@@ -134,8 +136,7 @@
                   <div
                     class="form-group-booking input-group-icn res-widget-col  col-sm-4 error-parent-no-tooltip input-group">
                     <font-awesome-icon class="form-group-booking-icon" :icon="['far', 'calendar-days']"/>
-                    <input  class="form-control form-group-booking-input-danger alert-danger" type="date"
-                           placeholder="-- Select Date --">
+                    <datetime  placeholder="-- Select Date --" type="datetime-local" v-model="calendar" class="form-control form-group-booking-input-danger alert-danger"></datetime>
                   </div>
                   <div
                     class="form-group-booking  input-group-icn res-widget-col  col-sm-4 error-parent-no-tooltip input-group">
@@ -159,7 +160,7 @@
                     <option value="2">2</option>
                   </select>
                 </div>
-                <div class="help-block resform-agenote">5 years and under</div>
+                <div class="help-block resform-agenote">12 years and under</div>
               </div>
               <div class="form-group-booking input-group-icn res-widget-col  col-sm-4 ">
                 <div class="input-group form-group-children">
@@ -179,19 +180,35 @@
                   <font-awesome-icon class="form-group-booking-icon" icon="couch"/>
                 </div>
                 <div class="btn-group d-lg-flex">
-                  <label class="form-group-table-label-active" for=""><input class="radio_buttons optional" value="1"  type="radio">Any</label>
-                  <label class="form-group-table-label" for=""><input class="radio_buttons optional" value="2" type="radio">Table</label>
-                  <label class="form-group-table-label" for=""><input class="radio_buttons optional" value="3" type="radio">Counter</label>
-                  <label class="form-group-table-label" for=""><input class="radio_buttons optional" value="4" type="radio">Outside</label>
-                  <label class="form-group-table-label" for=""><input class="radio_buttons optional" value="5" type="radio">Semi-private</label>
-                  <label class="form-group-table-label" for=""><input class="radio_buttons optional" value="6" type="radio">Tatami</label>
+                  <label class="form-group-table-label-active" for=""><input class="radio_buttons optional" value="1"
+                                                                             type="radio">Any</label>
+                  <label class="form-group-table-label" for=""><input class="radio_buttons optional" value="2"
+                                                                      type="radio">Table</label>
+                  <label class="form-group-table-label" for=""><input class="radio_buttons optional" value="3"
+                                                                      type="radio">Counter</label>
+                  <label class="form-group-table-label" for=""><input class="radio_buttons optional" value="4"
+                                                                      type="radio">Outside</label>
+                  <label class="form-group-table-label" for=""><input class="radio_buttons optional" value="5"
+                                                                      type="radio">Semi-private</label>
+                  <label class="form-group-table-label" for=""><input class="radio_buttons optional" value="6"
+                                                                      type="radio">Tatami</label>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <availability v-if="isOpenCalendar"/>
+      <availability v-if="isOpenCalendar" :isOpenCalendar="isOpenCalendar"  :calendar="calendar" v-on:showCalendar="showCalendar"/>
+      <div class="content-order col-lg-10 col-lg-offset-1 showheading" :style="{display: showHeadingCalendar ? 'block' : ''}">
+        <div class="panel-heading" >
+          <a class="panel-title" href="">Availability</a>
+          <div class="pull-right" v-on:click="showCalendar">
+            <a>
+              <font-awesome-icon class="fa-2x" :icon="changeIcon ? 'plus' : 'minus' "/>
+            </a>
+          </div>
+        </div>
+      </div>
       <div class="content2">
         <div class="row">
           <div class="reserveform-menu-items col-lg-10 col-lg-offset-1">
@@ -211,40 +228,46 @@
                     appetizer, main dish and dessert.
                   </div>
                   <div class="menu-item-content">
-                    <read-more class="menu-item-content-btn" less-str="Less More" more-str="Read More" :text=" '                      ■ Today\'s soup\n' +
-        '                      <br><br>\n' +
-        '                      ■ Appetizers (Choose one dish from these items)\n' +
-        '                      <br><br>\n' +
-        '                      · TODAY’S FISH CARPACCIO soy bean-genovese, potato mousse<br>\n' +
-        '                      · SEA URCHIN FLAN consomme gelatina (+ 700)<br>\n' +
-        '                      · CAPRESE OF JAPANESE PEAR house-made mozzarella, sweet cherry tomatoes<br>\n' +
-        '                      · MARINATED NORWEGIAN SALMON red & yellow bell pepper purée, zucchini, tapenade sauce<br>\n' +
-        '                      · DUCK SALAD sliced breast of duck, eggplant, watercress, lime-anchovy dressing<br>\n' +
-        '                      <br>\n' +
-        '                      ■ Main dish (Choose one dish from these items)<br>\n' +
-        '                      <br>\n' +
-        '                      · FISH OF THE DAY<br>\n' +
-        '                      · LOBSTER RISOTTO tomato sauce, parmigiano reggiano　(+600)<br>\n' +
-        '                      · SAUTEED PORK BELLY poached egg, white wine braised shiitake mushrooms<br>\n' +
-        '                      · LAMB & EGGPLANT “ MOUSSAKKA” minced lamb, eggplant, blue cheese gratine, potatoes, cumin<br>\n' +
-        '                      · ROASTED CHICKEN “POLPETTA” braised mushrooms, piperade sauce<br>\n' +
-        '                      <br>\n' +
-        '                      ■ Dessert (Choose one dish from these items)<br>\n' +
-        '                      <br>\n' +
-        '                      · GINGER & LIME MOUSSE<br>\n' +
-        '                      · FIG TARTE gorgonzola, port & black currant sauce<br>\n' +
-        '                      · HOUSE-MADE YOGURT granola - almonds, coconuts, dried cranberries<br>\n' +
-        '                      · TODAY’S ICE CREAM<br>\n' +
-        '                      <br>\n' +
-        '                      ■ Coffee or Tea<br>'" link="#"
-                               :max-chars="400"></read-more>
-                  </div>
-                  <div class="menu-item-small">
-                    Fine Print ※ The contents of the menu may change without prior notice depending on the market.
-                    Please acknowledge it beforehand.<br>
-                    ※ If you have allergy, please let us know in advance.<br>
-                    ※ Last-in time is 1:50 p.m. Close time is 3:00 p.m.<br>
-                    Meals LunchOrder Limit 2 ~ 6<br>
+                    <div class="menu-item-content-desc">
+                      ■ Today\'s soup
+                      <br><br>
+                      ■ Appetizers (Choose one dish from these items)
+                      <br><br>
+                      · TODAY’S FISH CARPACCIO soy bean-genovese, potato mousse<br>
+                      · SEA URCHIN FLAN consomme gelatina (+ 700)<br>
+                      · CAPRESE OF JAPANESE PEAR house-made mozzarella, sweet cherry tomatoes<br>
+                      · MARINATED NORWEGIAN SALMON red & yellow bell pepper purée, zucchini, tapenade sauce<br>
+                      <br>
+                    </div>
+                    <div class="menu-item-content-document" :class="!showreadMore ? '' : 'd-block' ">
+                      · DUCK SALAD sliced breast of duck, eggplant, watercress, lime-anchovy dressing<br>
+                      ■ Main dish (Choose one dish from these items)<br>
+                      <br>
+                      · FISH OF THE DAY<br>
+                      · LOBSTER RISOTTO tomato sauce, parmigiano reggiano　(+600)<br>
+                      · SAUTEED PORK BELLY poached egg, white wine braised shiitake mushrooms<br>
+                      · LAMB & EGGPLANT “ MOUSSAKKA” minced lamb, eggplant, blue cheese gratine, potatoes, cumin<br>
+                      · ROASTED CHICKEN “POLPETTA” braised mushrooms, piperade sauce<br>
+                      <br>
+                      ■ Dessert (Choose one dish from these items)<br>
+                      <br>
+                      · GINGER & LIME MOUSSE<br>
+                      · FIG TARTE gorgonzola, port & black currant sauce<br>
+                      · HOUSE-MADE YOGURT granola - almonds, coconuts, dried cranberries<br>
+                      · TODAY’S ICE CREAM<br>
+                      <br>
+                      ■ Coffee or Tea<br>'"
+                      <div class="menu-item-small">
+                        Fine Print ※ The contents of the menu may change without prior notice depending on the market.
+                        Please acknowledge it beforehand.<br>
+                        ※ If you have allergy, please let us know in advance.<br>
+                        ※ Last-in time is 1:50 p.m. Close time is 3:00 p.m.<br>
+                        Meals LunchOrder Limit 2 ~ 6<br>
+                      </div>
+                    </div>
+                    <div v-if="!closereadMore" class="show-more-btn-wrapper">
+                      <a v-on:click="readMore" class="btn btn-default show-more-btn">Read More</a>
+                    </div>
                   </div>
                 </div>
                 <div class="col-sm-2 col-xs-7 pull-right group3">
@@ -263,20 +286,20 @@
           </div>
         </div>
       </div>
-        <div class="col-lg-10 col-lg-offset-1 content-order">
-          <div class="panel panel-invisible">
-            <div class="panel-heading">
-              <div class="panel-title">Request</div>
-            </div>
-            <div class="panel-body">
-              <div class="reserveform-customerrequest">
-                <label for="" class="reserveform-customerrequest-label col-sm-3">Requests</label>
-                <div class="col-sm-7 control-area">
-                  <textarea class="reserveform-customerrequest-textarea"/>
-                </div>
+      <div class="col-lg-10 col-lg-offset-1 content-order">
+        <div class="panel panel-invisible">
+          <div class="panel-heading">
+            <h3 class="panel-title">Request</h3>
+          </div>
+          <div class="panel-body">
+            <div class="reserveform-customerrequest">
+              <label for="" class="reserveform-customerrequest-label col-sm-3">Requests</label>
+              <div class="col-sm-7 control-area">
+                <textarea class="reserveform-customerrequest-textarea"/>
               </div>
             </div>
           </div>
+        </div>
       </div>
     </div>
     <div class="footer">
@@ -313,25 +336,96 @@
 
 <script>
 import availability from "@/components/reservation/availability"
+import { Datetime } from 'vue-datetime'
+import moment from 'moment';
 export default {
   name: "Home",
-  components:{availability},
+  components: {availability,    datetime: Datetime},
   data() {
     return {
       isOpenNavMobile: false,
-      isOpenCalendar:false,
+      isOpenCalendar: false,
+      showreadMore:false,
+      closereadMore:false,
+      calendar : null,
+      changeIcon:false,
+      showHeadingCalendar:false,
+      dateList:[],
     }
+  },
+  watch:{
+    calendar(){
+      const today = moment(this.calendar);
+      const from_date = today.startOf('week');
+      const to_date = today.endOf('week');
+      var getDaysBetweenDates = function(startDate, endDate) {
+        var now = startDate.clone(), dates = [];
+
+        while (now.isSameOrBefore(endDate)) {
+          dates.push(now.format('MM/DD/YYYY'));
+          now.add(1, 'days');
+        }
+        return dates;
+      };
+      this.dateList = getDaysBetweenDates(from_date, to_date);
+    },
   },
   methods: {
     closeNav() {
       this.isOpenNavMobile = !this.isOpenNavMobile
     },
-    showCalendar(){
-      this.isOpenCalendar = true
+    showCalendar(cc) {
+      if (cc.open) {
+          this.showHeadingCalendar = true;
+          this.changeIcon = true
+          this.isOpenCalendar = !this.isOpenCalendar;
+        } else {
+        this.isOpenCalendar = !this.isOpenCalendar
+      }
+    },
+    readMore(){
+      this.showreadMore = true
+      this.closereadMore = true
+    },
+    calendarMethods(){
+      const today = moment(this.calendar);
+      console.log(today);
+      const from_date = today.startOf('week');
+      const to_date = today.endOf('week');
+      var getDaysBetweenDates = function(startDate, endDate) {
+        var now = startDate.clone(), dates = [];
+
+        while (now.isSameOrBefore(endDate)) {
+          dates.push(now.format('MM/DD/YYYY'));
+          now.add(1, 'days');
+        }
+        return dates;
+      };
+      var dateList = getDaysBetweenDates(from_date, to_date);
+      console.log(dateList);
+      console.log({
+        from_date: from_date.toString(),
+        to_date: to_date.toString(),
+      });
     },
   },
 }
 </script>
 
 <style scoped>
+.showheading{
+  display: none;
+}
+/*.panel-title {*/
+/*  font-size: 18px;*/
+/*  font-weight: 700;*/
+/*  color: var(--primary-color);*/
+/*}*/
+.pull-right{
+  display: inline-block;
+  float: right;
+}
+.pull-right a {
+  color: var(--primary-color);
+}
 </style>

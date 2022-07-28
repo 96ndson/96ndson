@@ -1,6 +1,5 @@
 <template>
   <div class="wrapper">
-    <a href="#" v-on:click="calendarMethods">CCCCCCCCCCCCCCCCCCCC</a>
     <div class="header d-flex justify-content-between">
       <div class="navbar-brand">
         <img
@@ -136,15 +135,15 @@
                   <div
                     class="form-group-booking input-group-icn res-widget-col  col-sm-4 error-parent-no-tooltip input-group">
                     <font-awesome-icon class="form-group-booking-icon" :icon="['far', 'calendar-days']"/>
-                    <datetime  placeholder="-- Select Date --" type="datetime-local" v-model="calendar" class="form-control form-group-booking-input-danger alert-danger"></datetime>
+                    <datetime placeholder="-- Select Date --" type="datetime-local" v-model="calendar"
+                              class="form-control form-group-booking-input-danger alert-danger"></datetime>
                   </div>
                   <div
                     class="form-group-booking  input-group-icn res-widget-col  col-sm-4 error-parent-no-tooltip input-group">
                     <font-awesome-icon class="form-group-booking-icon" :icon="['far', 'clock']"/>
                     <select class="form-control form-group-booking-input-danger select-disabled">
                       <option>-- Select Time --</option>
-                      <option value="9">9</option>
-                      <option value="10">10</option>
+                      <option v-for="times in testTime" value="9">{{ times }}</option>
                     </select>
                   </div>
                 </div>
@@ -158,6 +157,14 @@
                     <option>-- Children --</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
                   </select>
                 </div>
                 <div class="help-block resform-agenote">12 years and under</div>
@@ -169,38 +176,46 @@
                     <option>-- Baby --</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
                   </select>
                 </div>
                 <div class="help-block resform-agenote">5 years and under</div>
               </div>
             </div>
             <div class="form-group form-group-shared form-group-shared-children">
-              <div class="form-group-table col-xs-12 col-xs-only input-group-icn form-group-booking">
+              <div class="form-group-table col-xs-12 col-xs-only input-group-icn form-group-booking ">
                 <div class="top-icon">
                   <font-awesome-icon class="form-group-booking-icon" icon="couch"/>
                 </div>
                 <div class="btn-group d-lg-flex">
-                  <label class="form-group-table-label-active" for=""><input class="radio_buttons optional" value="1"
-                                                                             type="radio">Any</label>
-                  <label class="form-group-table-label" for=""><input class="radio_buttons optional" value="2"
-                                                                      type="radio">Table</label>
-                  <label class="form-group-table-label" for=""><input class="radio_buttons optional" value="3"
-                                                                      type="radio">Counter</label>
-                  <label class="form-group-table-label" for=""><input class="radio_buttons optional" value="4"
-                                                                      type="radio">Outside</label>
-                  <label class="form-group-table-label" for=""><input class="radio_buttons optional" value="5"
-                                                                      type="radio">Semi-private</label>
-                  <label class="form-group-table-label" for=""><input class="radio_buttons optional" value="6"
-                                                                      type="radio">Tatami</label>
+                  <label v-on:click="checkTableStyle(listTableStyles)"
+                         v-for="(listTableStyles) in listTableStyle"
+                         :class="tableStyle === listTableStyles.value ? 'form-group-table-label-active' : 'form-group-table-label'">
+                    <input
+                      class="radio_buttons optional"
+                      :value="listTableStyles.value"
+                      type="radio">
+                    {{ listTableStyles.name }}
+                  </label>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <availability v-if="isOpenCalendar" :isOpenCalendar="isOpenCalendar"  :calendar="calendar" v-on:showCalendar="showCalendar"/>
-      <div class="content-order col-lg-10 col-lg-offset-1 showheading" :style="{display: showHeadingCalendar ? 'block' : ''}">
-        <div class="panel-heading" >
+      <availability v-if="isOpenCalendar" :timeOrder="timeOrder" v-on:showWeek="showWeek" :monthLabels="monthLabels"
+                    :isOpenCalendar="isOpenCalendar" :calendar="calendar" v-on:showCalendar="showCalendar"
+                    :dateList="dateList"/>
+      <div class="content-order col-lg-10 col-lg-offset-1 showheading"
+           :style="{display: showHeadingCalendar ? 'block' : ''}">
+        <div class="panel-heading">
           <a class="panel-title" href="">Availability</a>
           <div class="pull-right" v-on:click="showCalendar">
             <a>
@@ -336,38 +351,85 @@
 
 <script>
 import availability from "@/components/reservation/availability"
-import { Datetime } from 'vue-datetime'
+import {Datetime} from 'vue-datetime'
 import moment from 'moment';
+import {workTime,listTableStyle} from '@/helpers/constant.js';
 export default {
   name: "Home",
-  components: {availability,    datetime: Datetime},
+  components: {availability, datetime: Datetime},
   data() {
     return {
       isOpenNavMobile: false,
       isOpenCalendar: false,
-      showreadMore:false,
-      closereadMore:false,
-      calendar : null,
-      changeIcon:false,
-      showHeadingCalendar:false,
-      dateList:[],
+      showreadMore: false,
+      closereadMore: false,
+      calendar: '',
+      changeIcon: false,
+      showHeadingCalendar: false,
+      dateList: [],
+      tableStyle: '',
+      timeOrder: [],
+      testTime: workTime,
+      listTableStyle: listTableStyle,
+      monthLabels:[]
     }
   },
-  watch:{
-    calendar(){
-      const today = moment(this.calendar);
-      const from_date = today.startOf('week');
-      const to_date = today.endOf('week');
-      var getDaysBetweenDates = function(startDate, endDate) {
-        var now = startDate.clone(), dates = [];
-
-        while (now.isSameOrBefore(endDate)) {
-          dates.push(now.format('MM/DD/YYYY'));
-          now.add(1, 'days');
+  watch: {
+    calendar() {
+      let days = [];
+      let today = moment(this.calendar);
+      let start = today.startOf('week').format('YYYY-MM-DD');
+      let end = today.endOf('week').format('YYYY-MM-DD');
+      let tempDate = start;
+      let listMonth = [
+        {
+          monthLabel: moment(this.calendar).startOf('isoWeek').format('MMM'),
+          numberDay: 1
+        },
+      ];
+      for (let i = 0; i <= 6; i++) {
+        tempDate = moment(tempDate).add(1, 'd').format('YYYY-MM-DD');
+        let label = moment(tempDate).format('dd');
+        let day = moment(tempDate).format('DD');
+        let month = moment(tempDate).format('MMM');
+        days = [...days, ...[{
+          label,
+          date: tempDate,
+          day,
+          month
+        }]];
+        if (i > 0) {
+          if(moment(tempDate).format('DD') == '01') {
+            listMonth.push({
+              monthLabel: moment(tempDate).format('MMM'),
+              numberDay: 1
+            })
+          }
+          else {
+            listMonth[listMonth.length -1].numberDay += 1;
+          }
         }
-        return dates;
-      };
-      this.dateList = getDaysBetweenDates(from_date, to_date);
+      }
+
+      this.monthLabels = [];
+      this.monthLabels = [...listMonth];
+      let testTimeValue = [];
+      for (let j = 0; j < this.testTime.length; j++) {
+        let th = []
+        tempDate = start;
+        for (let k = 0; tempDate <= end; k++) {
+          tempDate = moment(tempDate).add(1, 'd').format('YYYY-MM-DD');
+          th.push({
+            value: tempDate + ' ' + this.testTime[j]
+          })
+        }
+        th.unshift({value: this.testTime[j]});
+        th.push({value: this.testTime[j]});
+        testTimeValue.push(th)
+      }
+
+      this.dateList = days;
+      this.timeOrder = testTimeValue;
     },
   },
   methods: {
@@ -376,55 +438,46 @@ export default {
     },
     showCalendar(cc) {
       if (cc.open) {
-          this.showHeadingCalendar = true;
-          this.changeIcon = true
-          this.isOpenCalendar = !this.isOpenCalendar;
-        } else {
+        this.showHeadingCalendar = true;
+        this.changeIcon = true
+        this.isOpenCalendar = !this.isOpenCalendar;
+      } else {
         this.isOpenCalendar = !this.isOpenCalendar
       }
     },
-    readMore(){
+    readMore() {
       this.showreadMore = true
       this.closereadMore = true
     },
-    calendarMethods(){
-      const today = moment(this.calendar);
-      console.log(today);
-      const from_date = today.startOf('week');
-      const to_date = today.endOf('week');
-      var getDaysBetweenDates = function(startDate, endDate) {
-        var now = startDate.clone(), dates = [];
-
-        while (now.isSameOrBefore(endDate)) {
-          dates.push(now.format('MM/DD/YYYY'));
-          now.add(1, 'days');
-        }
-        return dates;
-      };
-      var dateList = getDaysBetweenDates(from_date, to_date);
-      console.log(dateList);
-      console.log({
-        from_date: from_date.toString(),
-        to_date: to_date.toString(),
-      });
+    showWeek($status) {
+      if ($status === 'next') {
+        this.calendar = moment(this.calendar).add(7, 'd').format('YYYY-MM-DD');
+      } else {
+        this.calendar = moment(this.calendar).subtract(7, 'd').format('YYYY-MM-DD');
+      }
     },
+    checkTableStyle(listTableStyles) {
+      this.tableStyle = listTableStyles.value;
+    }
   },
 }
 </script>
 
 <style scoped>
-.showheading{
+.showheading {
   display: none;
 }
+
 /*.panel-title {*/
 /*  font-size: 18px;*/
 /*  font-weight: 700;*/
-/*  color: var(--primary-color);*/
+/*  color: let(--primary-color);*/
 /*}*/
-.pull-right{
+.pull-right {
   display: inline-block;
   float: right;
 }
+
 .pull-right a {
   color: var(--primary-color);
 }

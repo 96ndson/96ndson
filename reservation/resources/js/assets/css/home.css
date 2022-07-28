@@ -289,6 +289,7 @@ body{
   color: var(--white-color);
   padding: 7px 12px;
   margin: 0;
+  border: 1px solid transparent;
   cursor:pointer
 }
 .form-group-table-label{
@@ -488,6 +489,9 @@ body{
   .reserveform-customerrequest-label{
     text-align: left;
   }
+  .navTableMobie{
+    display: block;
+  }
 }
 @media (min-width: 768px) and (max-width: 1024px) {
   .wrapper{
@@ -566,9 +570,12 @@ body{
   display: none;
 }
 .vdatetime-input{
+  display: block;
   border: none;
   background-color: #f8d7da;
-  margin: auto;  /* Magic! */
-  max-width: 100%;
+  width: 100%;
   max-height: 100%;
+}
+.pull-right{
+  cursor: pointer;
 }

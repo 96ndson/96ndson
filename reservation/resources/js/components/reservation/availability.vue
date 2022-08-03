@@ -53,11 +53,12 @@
             <tr class="timetable-row" v-for="date in timeOrder">
 
               <td class="time time-left" v-for="(time, key) in date">
-                <template v-if="key == 0 || key == 8">
+                <template v-if="key === 0 || key === 8">
                   {{ time.value }}
                 </template>
                 <template v-else>
                   <font-awesome-icon class="available table-icon" @click="selectTime(time)"
+                                     :class="timePrev.includes(time.value) ? 'dislable' : '' "
                                      :icon="chooseTime === time.value ? 'circle-check' : 'fa-solid fa-o'"/>
                 </template>
               </td>
@@ -97,6 +98,10 @@ export default {
     monthLabels: {
       type: Array,
       default: []
+    },
+    timePrev:{
+      type: Array,
+      default: []
     }
   },
   methods: {
@@ -108,7 +113,7 @@ export default {
     },
     selectTime(time) {
       this.chooseTime = time.value;
-      console.log(this.monthLabels)
+      console.log(time.value)
     },
     nextWeek() {
       this.$emit('showWeek', 'next');
@@ -202,9 +207,15 @@ export default {
   width: 100%;
   height: 100%;
   background-color: #def1de;
+  cursor: pointer;
 }
 
 .wday-hidden {
   border-top: none !important;
+}
+.dislable{
+  background: #BBBBBB;
+  pointer-events: none;
+  color: #BBBBBB!important;
 }
 </style>

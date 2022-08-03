@@ -212,7 +212,7 @@
       </div>
       <availability v-if="isOpenCalendar" :timeOrder="timeOrder" v-on:showWeek="showWeek" :monthLabels="monthLabels"
                     :isOpenCalendar="isOpenCalendar" :calendar="calendar" v-on:showCalendar="showCalendar"
-                    :dateList="dateList"/>
+                    :dateList="dateList" :timePrev="timePrev"/>
       <div class="content-order col-lg-10 col-lg-offset-1 showheading"
            :style="{display: showHeadingCalendar ? 'block' : ''}">
         <div class="panel-heading">
@@ -354,6 +354,7 @@ import availability from "@/components/reservation/availability"
 import {Datetime} from 'vue-datetime'
 import moment from 'moment';
 import {workTime,listTableStyle} from '@/helpers/constant.js';
+import axios from 'axios';
 export default {
   name: "Home",
   components: {availability, datetime: Datetime},
@@ -371,8 +372,16 @@ export default {
       timeOrder: [],
       testTime: workTime,
       listTableStyle: listTableStyle,
-      monthLabels:[]
+      monthLabels:[],
+      settingTimes: {
+        date: '',
+        time:[]
+      },
+      timePrev:[],
     }
+  },
+  created() {
+    this.getListTime();
   },
   watch: {
     calendar() {
@@ -458,6 +467,25 @@ export default {
     },
     checkTableStyle(listTableStyles) {
       this.tableStyle = listTableStyles.value;
+    },
+    async getListTime() {
+      try {
+        const response = await axios.get('http://reservation.test/api/time');
+        console.log(response.data)
+        for (let i=0;i<response.data.length;i++) {
+          let data = response.data[i];
+          let arr = JSON.parse(response.data[i].setting_time);
+          console.log(arr)
+          for (let j=0;j<arr.length;j++) {
+            this.timePrev.push(
+              response.data[i].date + ' ' + arr[j])
+          }
+        }
+        console.log(this.timePrev)
+        console.log(this.settingTimes)
+      } catch (error) {
+        this.error = error.response.data;
+      }
     }
   },
 }

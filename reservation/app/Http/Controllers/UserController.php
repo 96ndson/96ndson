@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
 use App\Http\Requests\ValidationLogin;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -14,6 +15,7 @@ class UserController extends Controller
     {
         $this->userRepository = $userRepository;
     }
+
     public function login(ValidationLogin $request)
     {
         $credentials = $request->only('email', 'password');
@@ -22,10 +24,12 @@ class UserController extends Controller
         }
         return respondWithToken($token);
     }
+
     public function userProfile()
     {
         return responseOK(auth()->user());
     }
+
     public function logout()
     {
         auth()->logout();

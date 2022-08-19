@@ -1,5 +1,6 @@
 <template>
   <div class="wrapper">
+    {{$store.getters.getUserName}}
     <div class="header d-flex justify-content-between">
       <div class="navbar-brand">
         <img
@@ -255,10 +256,10 @@
                   </div>
                   <div class="menu-item-content">
                     <div class="menu-item-content-desc">
-                      {{food.content.slice(0,500)}}
+                      1
                     </div>
                     <div class="menu-item-content-document" :class="!showreadMore ? '' : 'd-block' ">
-                      {{food.content.slice(500)}}
+                      1
                       <div class="menu-item-small">
                         Fine Print ※ The contents of the menu may change without prior notice depending on the market.
                         Please acknowledge it beforehand.<br>
@@ -275,7 +276,7 @@
                 <div class="col-sm-2 col-xs-7 pull-right group3">
                   <div class="menu-item-right">
                     <div class="menu-item-price row">
-                      <div class="menu-item-price-value">¥ {{food.price.toLocaleString('en-US')}}</div>
+                      <div class="menu-item-price-value">¥ 1</div>
                       <div class="menu-item-price-tax">(Tax Excl.)</div>
                     </div>
                     <div class="menu-item-select">
@@ -383,6 +384,10 @@ export default {
     }
   },
   created(){
+    // lấy thông tin user (token)
+    console.log(this.$store.getters.getToken, 'get token')
+    console.log(this.$store.getters.getUser, 'get user')
+
     this.getListFood()
     EventBus.$on('getUser', (data) =>{
       this.user = data;
@@ -457,7 +462,7 @@ export default {
       alert('Bạn có chắc chắn muốn đặt bàn không?')
       let {form,user} = this;
       form.style = this.tableStyle;
-      form.date = date.slice(0,10)
+      form.date = '1'
       console.log(form)
       ReservationService.postReservation(form)
         .then((res) => {

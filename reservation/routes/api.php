@@ -21,6 +21,8 @@ use App\Http\Controllers\ReservationController;
 //Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //    return $request->user();
 //});
+
+// chi user login vao cần truyền lên token
 Route::group([
     'middleware' => 'auth:api',
     'prefix' => 'auth'
@@ -28,7 +30,27 @@ Route::group([
 ], function ($router) {
     Route::post('/logout', [UserController::class, 'logout']);
     Route::get('/user-profile', [UserController::class, 'userProfile']);
+
+
+
+
+
+//    Route::get('/user-profile', [UserController::class, 'userProfile']);
+//    Route::get('/user-profile', [UserController::class, 'userProfile']);
+//    Route::get('/user-profile', [UserController::class, 'userProfile']);
+//    Route::get('/user-profile', [UserController::class, 'userProfile']);
+//    Route::get('/user-profile', [UserController::class, 'userProfile']);
+//    Route::get('/user-profile', [UserController::class, 'userProfile']);
+//    Route::get('/user-profile', [UserController::class, 'userProfile']);
+//    Route::get('/user-profile', [UserController::class, 'userProfile']);
+//    Route::get('/user-profile', [UserController::class, 'userProfile']);
+//    Route::get('/user-profile', [UserController::class, 'userProfile']);
+//    Route::get('/user-profile', [UserController::class, 'userProfile']);
+//    Route::get('/user-profile', [UserController::class, 'userProfile']);
+//    Route::get('/user-profile', [UserController::class, 'userProfile']);
+//    Route::get('/user-profile', [UserController::class, 'userProfile']);
 });
+
 
 Route::group([
     'prefix' => 'auth'

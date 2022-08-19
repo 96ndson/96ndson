@@ -16,7 +16,7 @@ class UserController extends Controller
     }
     public function login(ValidationLogin $request)
     {
-        $credentials = request(['email', 'password']);
+        $credentials = $request->only('email', 'password');
         if (!$token = auth()->attempt($credentials)) {
             return responseNotFound(['error' => trans('auth.failed')]);
         }

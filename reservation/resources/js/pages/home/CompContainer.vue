@@ -46,7 +46,8 @@
           </div>
           <div class="body__booking-1-calender padding-width">
             <font-awesome-icon icon="fa-solid fa-calendar-days" class="body__booking-1-icon" />
-            <input type="date" class="body__booking-1-select error-parent-no-tooltip border-bottom boder-none">
+            <input type="date" v-model="getday"
+              class="body__booking-1-select error-parent-no-tooltip border-bottom boder-none">
           </div>
           <div class="body__booking-1-time padding-width">
             <font-awesome-icon icon="fa-solid fa-clock" class="body__booking-1-icon" />
@@ -99,11 +100,12 @@
             <label class="body__seattype-radio margin-bottom">Semi-Private</label>
             <label class="body__seattype-radio margin-bottom">Tatami</label>
           </div>
-
         </div>
-        <comp-table v-if="selectedComponent" />
       </div>
-
+      <div class="body__table">
+        <comp-table v-if="selectedComponent" :arr="arr" :timeOrder="timeOrder" :timeWorkShop="timeWorkShop"
+          :getday="getday" :monthLabels="monthLabels" v-on:next="next" v-on:prev="prev" :classDis="classDis" :timett="timett" />
+      </div>
       <div class="body__menu">
         <div class="body__menu-img ">
           <img
@@ -115,7 +117,8 @@
           <div class="body__menu-content-tagline block">Please enjoy the original course with your favorite
             dishes.
             Today's soup is already included in this course menu, thereafter you can choose one item each
-            from appetizer, main dish and dessert.</div>
+            from appetizer, main dish and dessert.
+          </div>
           <div class="body__menu-content-des block">
             ■ Today's soup
             <br>
@@ -174,7 +177,7 @@
             <br>
             Meals LunchOrder Limit 2 ~ 6
           </div>
-          
+
         </div>
         <div class="body__menu-price">
           <span>¥ 2,200 </span><span>(Tax Excl.)</span>
@@ -266,7 +269,8 @@
 <script>
 import BackToTop from 'vue-backtotop'
 import CompTable from '@/components/reservation/CompTable.vue'
-
+import moment from 'moment';
+import { workTime, timeShop } from '@/helpers/constant.js'
 
 export default {
   name: 'Comp-Container',
@@ -276,17 +280,96 @@ export default {
   },
   data() {
     return {
-      selectedComponent: false
+      isShow: false,
+      getday: '2022/08/20',
+      arr: [],
+      selectedComponent: false,
+      timeOrder: [],
+      time: workTime,
+      timeShop: timeShop,
+      monthLabels: [],
+      timeWorkShop: [],
+      classDis: ' ',
     };
+  },
+  props: {
+    timett: {
+      type: Array,
+      default: []
+    }
+  },
+  watch: {
+    getday() {
+      this.$emit('getDay',this.getday);
+      let days = [];
+      let today = moment(this.getday);
+
+      let start = today.startOf('week').format('YYYY-MM-DD');
+      let startDay = today.startOf('week').format('d');
+      let end = today.endOf('week').format('YYYY-MM-DD');
+      let endDay = today.endOf('week').format('d');
+      let tempDate = start;
+      let result = [
+        {
+          monthLabel: moment(this.getday).startOf('week').format('MMM'),
+          numberDay: 1
+        }
+      ]
+      for (let i = 0; i <= endDay - startDay; i++) {
+        tempDate = moment(tempDate).add(1, 'd').format('YYYY-MM-DD');
+        let label = moment(tempDate).format('dd');
+        let day = moment(tempDate).format('DD');
+        let month = moment(tempDate).format('MMM');
+        days = [...days, ...[{
+          label: label,
+          date: tempDate,
+          day: day,
+          month: month
+        }]]
+        if (i > 0) {
+          if (moment(tempDate).format('DD') == '01') {
+            result.push({
+              monthLabel: moment(tempDate).format('MMM'),
+              numberDay: 1
+            })
+          } else {
+            result[result.length - 1].numberDay += 1;
+          }
+        }
+      }
+      this.monthLabels = [];
+      this.monthLabels = [...result];
+      this.arr = days;
+      //
+      let testTimeValue = [];
+      for (let j = 0; j < this.time.length; j++) {
+        let th = [];
+        tempDate = start;
+        for (let k = 0; tempDate <= end; k++) {
+          tempDate = moment(tempDate).add(1, 'd').format('YYYY-MM-DD');
+          th.push({
+            value: tempDate + ' ' + this.time[j],
+            date: tempDate
+          })
+        }
+        th.unshift({ value: this.time[j] });
+        th.push({ value: this.time[j] });
+        // console.log(th);
+        testTimeValue.push(th)
+      }
+      console.log(testTimeValue);
+      this.timeOrder = testTimeValue;
+    }
   },
   methods: {
     addTable() {
+      this.isShow = true;
       this.selectedComponent = true;
     },
     myFunction() {
-      var dots = document.getElementById("dots");
-      var moreText = document.getElementById("more");
-      var btnText = document.getElementById("myBtn");
+      let dots = document.getElementById("dots");
+      let moreText = document.getElementById("more");
+      let btnText = document.getElementById("myBtn");
 
       if (dots.style.display === "none") {
         dots.style.display = "inline";
@@ -297,12 +380,16 @@ export default {
         btnText.innerHTML = "Read less";
         moreText.style.display = "inline";
       }
+    },
+    next() {
+      this.getday = moment(this.getday).add(7, 'd').format('YYYY-MM-DD');
+    },
+    prev() {
+      this.getday = moment(this.getday).subtract(7, 'd').format('YYYY-MM-DD');
     }
-
   }
 };
 </script>
 
 <style scoped>
-
 </style>

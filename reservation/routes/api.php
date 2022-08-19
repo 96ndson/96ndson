@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\SettingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -32,3 +34,10 @@ Route::group([
 ], function ($router) {
     Route::post('/login', [UserController::class, 'login']);
 });
+
+Route::group([
+    'prefix' => 'auth'
+], function ($router) {
+    Route::get('/time', [SettingController::class, 'index']);
+});
+

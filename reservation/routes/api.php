@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\FoodController;
+use App\Http\Controllers\ReservationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,4 +35,6 @@ Route::group([
 ], function ($router) {
     Route::post('/login', [UserController::class, 'login']);
 });
-Route::get('/time', [SettingController::class,'index']);
+Route::get('/time', [SettingController::class, 'index']);
+Route::get('/food', [FoodController::class, 'index']);
+Route::post('/add-reservation', [ReservationController::class, 'add_reservation']);

@@ -39,6 +39,16 @@
                 <font-awesome-icon class="nav-icon" icon="utensils"/>
                 My Reservations</a>
             </li>
+            <li class="nav-item" v-if="!activeLogin">
+              <a class="nav-link" href="/login" >
+                <font-awesome-icon class="nav-icon" icon="fa-solid fa-right-to-bracket" />
+                Login</a>
+            </li>
+            <li class="nav-item" v-else>
+              <a class="nav-link" href="/login" v-on:click="handleLogout()">
+                <font-awesome-icon class="nav-icon" icon="fa-solid fa-right-to-bracket" />
+                Logout</a>
+            </li>
           </ul>
         </div>
       </nav>
@@ -67,7 +77,7 @@
               <li class="dropdown-item-mobile" href="#">Italiano</li>
             </ul>
           </li>
-          <li><a class="nav-link-mobile" href="#">
+          <li><a class="nav-link-mobile" href="#" id="myBtn">
             <font-awesome-icon class="nav-icon" icon="utensils"/>
             My Reservation</a></li>
           <li><a class="nav-link-mobile" href="#">
@@ -81,6 +91,7 @@
       </div>
     </div>
     <div class="content">
+      <form v-on:submit.prevent="submitFormReservation">
       <div class="content1">
         <div class="content-order col-lg-10 col-lg-offset-1">
           <div class="panel panel-invisible">
@@ -117,7 +128,7 @@
                   <div
                     class="form-group-booking input-group-icn res-widget-col col-sm-4 error-parent-no-tooltip input-group">
                     <font-awesome-icon class="form-group-booking-icon" icon="user-large"/>
-                    <select v-on:change="showCalendar" name="" id=""
+                    <select v-on:change="showCalendar" name="" id="" v-model="form.people"
                             class="form-control form-group-booking-input-danger alert-danger">
                       <option>-- Adults --</option>
                       <option value="1">1</option>
@@ -141,9 +152,9 @@
                   <div
                     class="form-group-booking  input-group-icn res-widget-col  col-sm-4 error-parent-no-tooltip input-group">
                     <font-awesome-icon class="form-group-booking-icon" :icon="['far', 'clock']"/>
-                    <select class="form-control form-group-booking-input-danger select-disabled">
+                    <select class="form-control form-group-booking-input-danger select-disabled" v-model="form.time">
                       <option>-- Select Time --</option>
-                      <option v-for="times in testTime" value="9">{{ times }}</option>
+                      <option v-for="times in testTime" :value="times">{{ times }}</option>
                     </select>
                   </div>
                 </div>
@@ -153,7 +164,7 @@
               <div class="form-group-booking input-group-icn res-widget-col  col-sm-4">
                 <div class="input-group form-group-children">
                   <font-awesome-icon class="form-group-booking-icon" icon="child-reaching"/>
-                  <select name="" class="form-control form-group-booking-input">
+                  <select name="" class="form-control form-group-booking-input" v-model="form.children">
                     <option>-- Children --</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -172,8 +183,8 @@
               <div class="form-group-booking input-group-icn res-widget-col  col-sm-4 ">
                 <div class="input-group form-group-children">
                   <font-awesome-icon class="form-group-booking-icon" icon="baby"/>
-                  <select name="" class="form-control form-group-booking-input">
-                    <option>-- Baby --</option>
+                  <select name="" class="form-control form-group-booking-input" v-model="form.baby">
+                    <option value="">-- Baby --</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
@@ -212,7 +223,7 @@
       </div>
       <availability v-if="isOpenCalendar" :timeOrder="timeOrder" v-on:showWeek="showWeek" :monthLabels="monthLabels"
                     :isOpenCalendar="isOpenCalendar" :calendar="calendar" v-on:showCalendar="showCalendar"
-                    :dateList="dateList" :timePrev="timePrev"/>
+                    :dateList="dateList" :timePrev="timePrev" v-on:submitFormReservation="submitFormReservation"/>
       <div class="content-order col-lg-10 col-lg-offset-1 showheading"
            :style="{display: showHeadingCalendar ? 'block' : ''}">
         <div class="panel-heading">
@@ -224,6 +235,8 @@
           </div>
         </div>
       </div>
+<!--      <button class="btn btn-primary btn-order" type="submit">Đặt lịch</button>-->
+      </form>
       <div class="content2">
         <div class="row">
           <div class="reserveform-menu-items col-lg-10 col-lg-offset-1">
@@ -232,46 +245,20 @@
               <div class="menu-items-content d-flex">
                 <div class="col-sm-2 col-xs-5 no-pad-right pull-left group1">
                   <img class="menu-item-image img-responsive"
-                       src="https://cdn3.tablecheck.com/menu_items/5f87d47849dc22000164c198/images/sm/carpacchio2_2_1_.jpg?1602737273"
+                       :src="food.image"
                        alt="">
                 </div>
                 <div class="col-sm-8 col-xs-12 group2">
-                  <div class="menu-item-heading order-1">Prefix Lunch Course</div>
+                  <div class="menu-item-heading order-1">{{food.title}}</div>
                   <div class="menu-item-desc">
-                    Please enjoy the original course with your favorite dishes.<br>
-                    Today's soup is already included in this course menu, thereafter you can choose one item each from
-                    appetizer, main dish and dessert.
+                    {{food.description}}
                   </div>
                   <div class="menu-item-content">
                     <div class="menu-item-content-desc">
-                      ■ Today\'s soup
-                      <br><br>
-                      ■ Appetizers (Choose one dish from these items)
-                      <br><br>
-                      · TODAY’S FISH CARPACCIO soy bean-genovese, potato mousse<br>
-                      · SEA URCHIN FLAN consomme gelatina (+ 700)<br>
-                      · CAPRESE OF JAPANESE PEAR house-made mozzarella, sweet cherry tomatoes<br>
-                      · MARINATED NORWEGIAN SALMON red & yellow bell pepper purée, zucchini, tapenade sauce<br>
-                      <br>
+                      {{food.content.slice(0,500)}}
                     </div>
                     <div class="menu-item-content-document" :class="!showreadMore ? '' : 'd-block' ">
-                      · DUCK SALAD sliced breast of duck, eggplant, watercress, lime-anchovy dressing<br>
-                      ■ Main dish (Choose one dish from these items)<br>
-                      <br>
-                      · FISH OF THE DAY<br>
-                      · LOBSTER RISOTTO tomato sauce, parmigiano reggiano　(+600)<br>
-                      · SAUTEED PORK BELLY poached egg, white wine braised shiitake mushrooms<br>
-                      · LAMB & EGGPLANT “ MOUSSAKKA” minced lamb, eggplant, blue cheese gratine, potatoes, cumin<br>
-                      · ROASTED CHICKEN “POLPETTA” braised mushrooms, piperade sauce<br>
-                      <br>
-                      ■ Dessert (Choose one dish from these items)<br>
-                      <br>
-                      · GINGER & LIME MOUSSE<br>
-                      · FIG TARTE gorgonzola, port & black currant sauce<br>
-                      · HOUSE-MADE YOGURT granola - almonds, coconuts, dried cranberries<br>
-                      · TODAY’S ICE CREAM<br>
-                      <br>
-                      ■ Coffee or Tea<br>'"
+                      {{food.content.slice(500)}}
                       <div class="menu-item-small">
                         Fine Print ※ The contents of the menu may change without prior notice depending on the market.
                         Please acknowledge it beforehand.<br>
@@ -288,7 +275,7 @@
                 <div class="col-sm-2 col-xs-7 pull-right group3">
                   <div class="menu-item-right">
                     <div class="menu-item-price row">
-                      <div class="menu-item-price-value">¥ 2,200</div>
+                      <div class="menu-item-price-value">¥ {{food.price.toLocaleString('en-US')}}</div>
                       <div class="menu-item-price-tax">(Tax Excl.)</div>
                     </div>
                     <div class="menu-item-select">
@@ -353,8 +340,9 @@
 import availability from "@/components/reservation/availability"
 import {Datetime} from 'vue-datetime'
 import moment from 'moment';
-import {workTime,listTableStyle} from '@/helpers/constant.js';
-import axios from 'axios';
+import {workTime, listTableStyle} from '@/helpers/constant.js';
+import EventBus from '@/plugins/eventBus';
+import {FoodService,ReservationService} from '@/services'
 export default {
   name: "Home",
   components: {availability, datetime: Datetime},
@@ -372,19 +360,43 @@ export default {
       timeOrder: [],
       testTime: workTime,
       listTableStyle: listTableStyle,
-      monthLabels:[],
-      settingTimes: {
-        date: '',
-        time:[]
-      },
-      timePrev:[],
+      monthLabels: [],
+      timePrev: [],
+      activeLogin: false,
+      food : {},
+      form : {
+        people : null,
+        children : null,
+        baby : null,
+        time :'',
+        date : '',
+        user_id : 1,
+        shop_id : 1,
+        style : null
+      }
     }
   },
-  created() {
-    this.getListTime();
+  props: {
+    user:{
+      type: '',
+      default:null
+    }
+  },
+  created(){
+    this.getListFood()
+    EventBus.$on('getUser', (data) =>{
+      this.user = data;
+    });
+    if(localStorage.getItem('ACCESS_TOKEN')){
+      this.activeLogin = true
+    }
+  },
+  destroyed(){
+    EventBus.$off("getUser");
   },
   watch: {
     calendar() {
+      this.getListTime();
       let days = [];
       let today = moment(this.calendar);
       let start = today.startOf('week').format('YYYY-MM-DD');
@@ -408,14 +420,13 @@ export default {
           month
         }]];
         if (i > 0) {
-          if(moment(tempDate).format('DD') == '01') {
+          if (moment(tempDate).format('DD') == '01') {
             listMonth.push({
               monthLabel: moment(tempDate).format('MMM'),
               numberDay: 1
             })
-          }
-          else {
-            listMonth[listMonth.length -1].numberDay += 1;
+          } else {
+            listMonth[listMonth.length - 1].numberDay += 1;
           }
         }
       }
@@ -442,6 +453,31 @@ export default {
     },
   },
   methods: {
+    submitFormReservation(date) {
+      alert('Bạn có chắc chắn muốn đặt bàn không?')
+      let {form,user} = this;
+      form.style = this.tableStyle;
+      form.date = date.slice(0,10)
+      console.log(form)
+      ReservationService.postReservation(form)
+        .then((res) => {
+          console.log(res)
+        })
+        .catch((error) => {
+          console.log(error)
+        });
+    },
+    handleLogout() {
+      var check = confirm('Bạn có thực sự muốn đăng xuất?');
+      if(check) {
+          this.user = {};
+          localStorage.removeItem('ACCESS_TOKEN')
+          this.$router.push('/login');
+      }
+    },
+    // getUser(user){
+    //   this.userInfo = user;
+    // },
     closeNav() {
       this.isOpenNavMobile = !this.isOpenNavMobile
     },
@@ -470,22 +506,28 @@ export default {
     },
     async getListTime() {
       try {
-        const response = await axios.get('http://reservation.test/api/time');
-        console.log(response.data)
-        for (let i=0;i<response.data.length;i++) {
-          let data = response.data[i];
+        const response = await SettingService.getSettings({
+            params:
+              {
+                date: moment(this.calendar).format('YYYY-MM-DD')
+              }
+          }
+        );
+        for (let i = 0; i < response.data.length; i++) {
           let arr = JSON.parse(response.data[i].setting_time);
           console.log(arr)
-          for (let j=0;j<arr.length;j++) {
+          for (let j = 0; j < arr.length; j++) {
             this.timePrev.push(
               response.data[i].date + ' ' + arr[j])
           }
         }
-        console.log(this.timePrev)
-        console.log(this.settingTimes)
       } catch (error) {
-        this.error = error.response.data;
+        this.error = error.response?.data;
       }
+    },
+    async getListFood(){
+      const response = await FoodService.getFoods();
+      this.food = response.data
     }
   },
 }
@@ -495,12 +537,6 @@ export default {
 .showheading {
   display: none;
 }
-
-/*.panel-title {*/
-/*  font-size: 18px;*/
-/*  font-weight: 700;*/
-/*  color: let(--primary-color);*/
-/*}*/
 .pull-right {
   display: inline-block;
   float: right;
@@ -508,5 +544,13 @@ export default {
 
 .pull-right a {
   color: var(--primary-color);
+}
+.btn-order{
+  position: sticky;
+  top: 20px;
+  font-size: 1.6rem;
+  padding: 8px 16px;
+  text-transform: capitalize;
+  z-index: 1;
 }
 </style>

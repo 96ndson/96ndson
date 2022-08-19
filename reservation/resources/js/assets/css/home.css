@@ -398,7 +398,7 @@ body{
 }
 .show-more-btn-wrapper {
   position: absolute;
-  bottom: 20px;
+  bottom: 0;
   left: 0;
   width: 100%;
   text-align: center;
@@ -425,6 +425,9 @@ body{
 }
 /*reponsive*/
 @media (max-width: 767px) {
+  .modal{
+    padding: 0;
+  }
   .wrapper{
     margin: unset;
     max-width: none;

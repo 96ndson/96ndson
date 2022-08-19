@@ -57,9 +57,14 @@
                   {{ time.value }}
                 </template>
                 <template v-else>
-                  <font-awesome-icon class="available table-icon" @click="selectTime(time)"
-                                     :class="timePrev.includes(time.value) ? 'dislable' : '' "
-                                     :icon="chooseTime === time.value ? 'circle-check' : 'fa-solid fa-o'"/>
+                  <template v-if="timePrev.includes(time.value)">
+                    <font-awesome-icon class="dislable available table-icon"
+                                       icon="x"/>
+                  </template>
+                  <template v-else>
+                    <font-awesome-icon class="available table-icon " @click="selectTime(time)"
+                                       :icon="chooseTime === time.value ? 'circle-check' : 'fa-solid fa-o'"/>
+                  </template>
                 </template>
               </td>
             </tr>
@@ -99,7 +104,7 @@ export default {
       type: Array,
       default: []
     },
-    timePrev:{
+    timePrev: {
       type: Array,
       default: []
     }
@@ -113,6 +118,7 @@ export default {
     },
     selectTime(time) {
       this.chooseTime = time.value;
+      this.$emit('submitFormReservation',this.chooseTime)
       console.log(time.value)
     },
     nextWeek() {
@@ -213,9 +219,10 @@ export default {
 .wday-hidden {
   border-top: none !important;
 }
-.dislable{
+
+.dislable {
   background: #BBBBBB;
   pointer-events: none;
-  color: #BBBBBB!important;
+  color: #fff;
 }
 </style>

@@ -20,6 +20,7 @@ class CreateSettingsTable extends Migration
             $table->json('setting_time');
             $table->date('date');
             $table->timestamps();
+            $table->softDeletes()->nullable();
         });
     }
 

@@ -49,7 +49,9 @@
               <!-- Checkbox -->
               <div class="form-check mb-0">
                 <input style="margin-top: 5px" class="form-check-input me-2" type="checkbox" value=""
-                       id="form2Example3"/>
+                       id="form2Example3"
+                      v-model="form.is_remember"
+                />
                 <label class="form-check-label" for="form2Example3">
                   Remember me
                 </label>
@@ -73,15 +75,17 @@
 </template>
 
 <script>
-import {LoginService} from '@/services';
+import {UserService} from '@/services';
 import EventBus from '@/plugins/eventBus'
+
 export default {
   name: "Login",
   data() {
     return {
       form: {
         email: '',
-        password: ''
+        password: '',
+        is_remember: false
       },
       errorValidate: '',
     }
@@ -93,24 +97,21 @@ export default {
     }
   },
   methods: {
-    async handleSubmitLogin() {
-      LoginService.login(this.form)
-        .then(result => {
-          this.user = result.data;
-          alert('Đăng nhập thành công');
-          localStorage.setItem('ACCESS_TOKEN',this.user.access_token )
-          EventBus.$emit('getUser',this.user.access_token );
-          this.$router.push('/');
-        })
-        .catch(error => {
-          if (error.response.data.message.error) {
-            this.errorValidate = error.response.data.message.error
-          } else {
-            let email = error.response.data.errors.email ?? '';
-            let password = error.response.data.errors.password ?? '';
-            this.errorValidate = email+password
-          }
-        });
+    handleSubmitLogin() {
+      UserService.login(this.form).then(response => {
+        // token, thông tin user (response.data)
+
+        // 1.thông báo login thành công (toast)
+
+        // 2.redirect trang home
+        this.$router.push({ name: 'home'}, () => {})
+        // 3. lưu token vào cả vuex và cả localStorage để sau còn sử dung => truyền rất nhiều component
+        this.$store.dispatch('actionSetToken', response.data.access_token)
+        this.$store.dispatch('actionSetUser', response.data.user)
+
+      }).catch(errors => {
+
+      })
     },
   },
 

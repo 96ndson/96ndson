@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import authRoute from '@/routers/auth'
+import stores from '@/stores'
+import routers from '@/routers'
 
 import Home from '@/pages/Home';
 
@@ -12,7 +14,7 @@ const routes = [
     name: 'home',
     component: Home,
     meta: {
-      login: true
+      isLogin: true
     },
   },
   ...authRoute
@@ -28,15 +30,13 @@ const router = new VueRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
-  const requiresAuth = to.matched.some(x => !x.meta.login)
-  const isAuthenticated = true;
-  /*if (requiresAuth && !isAuthenticated) {
-    // next('login');
-  } else if (to.path === '/login' && isAuthenticated) {
-    // next('/')
-  } else {
-
-  }*/
+  const isLogin = to.matched.some(x => x.meta.isLogin)
+  const token = stores.getters.getToken
+  if (isLogin) {
+    if (!token) {
+      routers.push({ name: 'login'}, () => {})
+    }
+  }
   next()
 })
 

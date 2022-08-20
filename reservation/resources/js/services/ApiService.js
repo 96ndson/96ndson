@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
-// import store from '@/store'
-// import {ACTION_SET_ERROR, ACTION_SET_LOADING, ACTION_FINISH_LOADING} from '@/store/common/actions'
+import store from '@/stores'
+import {ACTION_SET_ERROR} from '@/stores/common/actions'
 import {
   NO_INTERNET,
   UNAUTHENTICATED,
@@ -10,25 +10,32 @@ import {
   LOGIN_FAILED,
   SERVER_ERROR
 } from '@/helpers/message'
+import {CLEAR_DATA_LOGOUT} from '@/stores/authUser/actions'
+let subscribers = []
 
 const ApiService = {
   init() {
     const service = this
     Vue.use(VueAxios, axios)
-    Vue.axios.defaults.baseURL = API_ENDPOINT
     Vue.axios.interceptors.request.use(
       (request) => {
+        const accessToken = store.getters.getToken
+        if (accessToken) {
+          request.headers.common['Authorization'] = `Bearer ${accessToken}`;
+        }
         if (request.setLoading) {
-          // store.dispatch(ACTION_SET_LOADING)
+          console.log(store.dispatch, '4')
+          store.dispatch('setLoading')
         }
         return request
       },
       (error) => {
         const {response} = error;
         if (response.config.setLoading) {
-          // store.dispatch(ACTION_FINISH_LOADING)
+          console.log(store.dispatch, '3')
+          store.dispatch('setFinishLoading')
         }
-
+        // Do something with request error
         return Promise.reject(response)
       }
     )
@@ -37,15 +44,32 @@ const ApiService = {
       (response) => {
         const {config} = response;
         if (config.setLoading) {
-          // store.dispatch(ACTION_FINISH_LOADING)
+          console.log(store.dispatch, '1')
+          store.dispatch('setFinishLoading')
         }
         return response
       },
       (error) => {
         const {response, config} = error;
         if (config.setLoading) {
-          // store.dispatch(ACTION_FINISH_LOADING)
+          console.log(store.dispatch, '2')
+          store.dispatch('setFinishLoading')
         }
+        // check refresh token
+        if (response && response.status == 401) {
+          if (config.url.includes('/user')) {
+            store.dispatch(CLEAR_DATA_LOGOUT)
+          } else if (config.url.includes('/instructor')) {
+            store.dispatch(CLEAR_DATA_LOGOUT_INSTRUCTOR)
+          } else if (config.url.includes('/admin')) {
+            store.dispatch(CLEAR_DATA_LOGOUT_ADMIN)
+          } else {
+
+          }
+          //store.dispatch(ACTION_GO_LOGIN)
+          return this.retryOriginalRequest(config);
+        }
+
         // check if config errorHandler is on
         if (config.globalErrorHandler.on) {
           service.handleError(response, config.globalErrorHandler.exclude)
@@ -66,19 +90,36 @@ const ApiService = {
       on: true,
       exclude: [],
     };
-    // Vue.axios.defaults.headers.common.Authorization = `Bearer ${ACCESS _TOKEN}`
   },
   setHeaderImage(type) {
     Vue.axios.defaults.headers.common[
       'Content-Type'
       ] = type
   },
+  onAccessTokenFetched(accessToken) {
+    subscribers.forEach(function (callback) {
+      callback(accessToken);
+    })
+    this.clearSubscriber();
+  },
+  retryOriginalRequest(originalRequest) {
+    return new Promise((resolve) => {
+      this.addSubscriber(accessToken => {
+        originalRequest.headers.Authorization = `Bearer ${accessToken}`
+        resolve(axios(originalRequest))
+      })
+    })
+  },
+  addSubscriber(callback) {
+    subscribers.push(callback)
+  },
+  clearSubscriber() {
+    subscribers = [];
+  },
   setResponseType(type) {
     Vue.axios.defaults.responseType = type
   },
   get(resource, config = {}) {
-    console.log(resource, 'rrrrrrrrrrrrrr')
-    console.log(config, 'aaaaaaaaaaaaaa')
     return Vue.axios.get(resource, config)
   },
   post(resource, params, config = {}) {
@@ -97,7 +138,9 @@ const ApiService = {
     return Vue.axios(config)
   },
   handleError(response, ignore = []) {
-    if (ignore.length > 0 && ignore.includes(response.status)) return response
+    if (ignore.length > 0 && ignore.includes(response.status)) {
+      return response
+    }
     let error = null
     if (!navigator.onLine || !response) {
       error = new Error(NO_INTERNET)
@@ -108,8 +151,15 @@ const ApiService = {
           break;
 
         case 401:
-          // store.dispatch(LOGOUT, response.status)
-          error = new Error(UNAUTHENTICATED)
+          if (store.getters.typeLogin == 'user') {
+            store.dispatch(CLEAR_DATA_LOGOUT)
+          } else if (store.getters.typeLogin == 'admin') {
+            store.dispatch(CLEAR_DATA_LOGOUT_ADMIN)
+          } else if (store.getters.typeLogin == 'instructor') {
+            store.dispatch(CLEAR_DATA_LOGOUT_INSTRUCTOR)
+          } else {
+
+          }
           break;
 
         case 403:
@@ -121,8 +171,13 @@ const ApiService = {
           break;
 
         case 422:
-          if (response.config.url === 'auth/login') {
-            error = new Error(LOGIN_FAILED)
+          for (let er in response.data.errors) {
+            if (response.data.errors[er][0]) {
+              Vue.$toast.error(response.data.errors[er][0], {enableHtml: true});
+            } else {
+              Vue.$toast.error(response.data.errors[er], {enableHtml: true});
+            }
+            break;
           }
           break;
 
@@ -131,7 +186,7 @@ const ApiService = {
           break;
       }
     }
-    // store.dispatch(ACTION_SET_ERROR, error)
+    store.dispatch(ACTION_SET_ERROR, error)
   }
 }
 

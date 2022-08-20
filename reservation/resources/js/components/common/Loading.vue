@@ -26,8 +26,11 @@
 
   #loader {
     position: absolute;
-    left: 50%;
-    top: 50%;
+    left: 0px;
+    top: 0px;
+    bottom: 0px;
+    right: 0px;
+    margin: auto;
     transform: translate(-50%, -50%);
     border: 16px solid #f3f3f3;
     border-radius: 50%;

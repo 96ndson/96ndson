@@ -1,95 +1,6 @@
 <template>
   <div class="wrapper">
-    <div class="header d-flex justify-content-between">
-      <div class="navbar-brand">
-        <img
-          src="https://cdn0.tablecheck.com/shops/557ecc9ba0749e2a48003703/tc_header_images/md/DAZZLE_WD%E3%83%AD%E3%82%B4.png?1473998345"
-          alt="">
-      </div>
-      <nav class="navbar navbar-expand-lg navbar-expand-sm ">
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <font-awesome-icon class="nav-icon" icon="fa-solid fa-circle-question"/>
-                Help</a>
-            </li>
-            <div class="nav-item nav-item-dropdown">
-              <div class=" dropdown show">
-                <a class="nav-link dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
-                   aria-haspopup="true" aria-expanded="false">
-                  <font-awesome-icon class="nav-icon" icon="earth-europe"/>
-                  English
-                </a>
-                <div class="dropdown-menu dropdown-menu-header" aria-labelledby="dropdownMenuLink">
-                  <a class="dropdown-item" href="#">English</a>
-                  <a class="dropdown-item" href="#">日本語</a>
-                  <a class="dropdown-item" href="#">한국어</a>
-                  <a class="dropdown-item" href="#">Vietnamese</a>
-                  <a class="dropdown-item" href="#">Brazil</a>
-                  <a class="dropdown-item" href="#">ภาษาไทย</a>
-                  <a class="dropdown-item" href="#">العربية</a>
-                  <a class="dropdown-item" href="#">Italiano</a>
-
-                </div>
-              </div>
-            </div>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <font-awesome-icon class="nav-icon" icon="utensils"/>
-                My Reservations</a>
-            </li>
-            <li class="nav-item" v-if="!activeLogin">
-              <a class="nav-link" href="/login" >
-                <font-awesome-icon class="nav-icon" icon="fa-solid fa-right-to-bracket" />
-                Login</a>
-            </li>
-            <li class="nav-item" v-else>
-              <a class="nav-link" href="/login" v-on:click="handleLogout()">
-                <font-awesome-icon class="nav-icon" icon="fa-solid fa-right-to-bracket" />
-                Logout</a>
-            </li>
-          </ul>
-        </div>
-      </nav>
-      <button class="btn nav-mobile-toggle" type="button" data-toggle="collapse"
-              data-target="#cc"
-              aria-controls="navbarToggleExternalContent" aria-expanded="false">
-        <font-awesome-icon icon="bars"/>
-      </button>
-      <div class="nav-mobile collapse show navbar-collapse" v-bind:class="isOpenNavMobile ? '' : 'hidden'" id="cc">
-        <ul class="nav navbar-nav">
-          <li class="nav-mobile-link-about ">
-            <a class="dropdown-toggle nav-link-mobile" role="button"
-               id="dropdownMenuLinkMobile" data-toggle="dropdown"
-               aria-haspopup="true" aria-expanded="false" href="#">
-              <font-awesome-icon class="nav-icon" icon="earth-europe"/>
-              English
-            </a>
-            <ul class="dropdown-menu dropdown-menu-mobile" aria-labelledby="dropdownMenuLinkMobile">
-              <li class="dropdown-item-mobile" href="#">English</li>
-              <li class="dropdown-item-mobile" href="#">日本語</li>
-              <li class="dropdown-item-mobile" href="#">한국어</li>
-              <li class="dropdown-item-mobile" href="#">Vietnamese</li>
-              <li class="dropdown-item-mobile" href="#">Brazil</li>
-              <li class="dropdown-item-mobile" href="#">ภาษาไทย</li>
-              <li class="dropdown-item-mobile" href="#">العربية</li>
-              <li class="dropdown-item-mobile" href="#">Italiano</li>
-            </ul>
-          </li>
-          <li><a class="nav-link-mobile" href="#" id="myBtn">
-            <font-awesome-icon class="nav-icon" icon="utensils"/>
-            My Reservation</a></li>
-          <li><a class="nav-link-mobile" href="#">
-            <font-awesome-icon class="nav-icon" icon="circle-question"/>
-            Helps</a></li>
-          <li><a class="nav-link-mobile" href="#">For Retaurants</a></li>
-          <li class="nav-mobile-link-out" v-on:click="closeNav()">
-            <font-awesome-icon class="nav-icon" icon="angles-right"/>
-          </li>
-        </ul>
-      </div>
-    </div>
+    <Header></Header>
     <div class="content">
       <form v-on:submit.prevent="submitFormReservation">
       <div class="content1">
@@ -255,10 +166,10 @@
                   </div>
                   <div class="menu-item-content">
                     <div class="menu-item-content-desc">
-                      {{food.content.slice(0,500)}}
+                      1
                     </div>
                     <div class="menu-item-content-document" :class="!showreadMore ? '' : 'd-block' ">
-                      {{food.content.slice(500)}}
+                      1
                       <div class="menu-item-small">
                         Fine Print ※ The contents of the menu may change without prior notice depending on the market.
                         Please acknowledge it beforehand.<br>
@@ -275,7 +186,7 @@
                 <div class="col-sm-2 col-xs-7 pull-right group3">
                   <div class="menu-item-right">
                     <div class="menu-item-price row">
-                      <div class="menu-item-price-value">¥ {{food.price.toLocaleString('en-US')}}</div>
+                      <div class="menu-item-price-value">¥ 1</div>
                       <div class="menu-item-price-tax">(Tax Excl.)</div>
                     </div>
                     <div class="menu-item-select">
@@ -338,6 +249,7 @@
 
 <script>
 import availability from "@/components/reservation/availability"
+import Header from "@/components/header/Header"
 import {Datetime} from 'vue-datetime'
 import moment from 'moment';
 import {workTime, listTableStyle} from '@/helpers/constant.js';
@@ -345,7 +257,7 @@ import EventBus from '@/plugins/eventBus';
 import {FoodService,ReservationService} from '@/services'
 export default {
   name: "Home",
-  components: {availability, datetime: Datetime},
+  components: {availability, Header, datetime: Datetime},
   data() {
     return {
       isOpenNavMobile: false,
@@ -457,27 +369,15 @@ export default {
       alert('Bạn có chắc chắn muốn đặt bàn không?')
       let {form,user} = this;
       form.style = this.tableStyle;
-      form.date = date.slice(0,10)
-      console.log(form)
+      form.date = '1'
       ReservationService.postReservation(form)
         .then((res) => {
-          console.log(res)
+
         })
         .catch((error) => {
-          console.log(error)
+
         });
     },
-    handleLogout() {
-      var check = confirm('Bạn có thực sự muốn đăng xuất?');
-      if(check) {
-          this.user = {};
-          localStorage.removeItem('ACCESS_TOKEN')
-          this.$router.push('/login');
-      }
-    },
-    // getUser(user){
-    //   this.userInfo = user;
-    // },
     closeNav() {
       this.isOpenNavMobile = !this.isOpenNavMobile
     },

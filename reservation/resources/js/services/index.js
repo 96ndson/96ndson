@@ -1,13 +1,13 @@
 import ApiService from './ApiService';
 import SettingService from './SettingService';
-import LoginService from './LoginService';
+import UserService from './UserService';
 import FoodService from './FoodService';
 import ReservationService from './ReservationService'
 
 export {
   ApiService,
   SettingService,
-  LoginService,
+  UserService,
   FoodService,
   ReservationService
 }

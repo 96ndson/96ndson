@@ -2,7 +2,7 @@ import Vue from 'vue'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import store from '@/stores'
-import {ACTION_SET_ERROR, ACTION_SET_LOADING, ACTION_FINISH_LOADING} from '@/stores/common/actions'
+import {ACTION_SET_ERROR} from '@/stores/common/actions'
 import {
   NO_INTERNET,
   UNAUTHENTICATED,
@@ -24,14 +24,16 @@ const ApiService = {
           request.headers.common['Authorization'] = `Bearer ${accessToken}`;
         }
         if (request.setLoading) {
-          store.dispatch(ACTION_SET_LOADING)
+          console.log(store.dispatch, '4')
+          store.dispatch('setLoading')
         }
         return request
       },
       (error) => {
         const {response} = error;
         if (response.config.setLoading) {
-          store.dispatch(ACTION_FINISH_LOADING)
+          console.log(store.dispatch, '3')
+          store.dispatch('setFinishLoading')
         }
         // Do something with request error
         return Promise.reject(response)
@@ -42,14 +44,16 @@ const ApiService = {
       (response) => {
         const {config} = response;
         if (config.setLoading) {
-          store.dispatch(ACTION_FINISH_LOADING)
+          console.log(store.dispatch, '1')
+          store.dispatch('setFinishLoading')
         }
         return response
       },
       (error) => {
         const {response, config} = error;
         if (config.setLoading) {
-          store.dispatch(ACTION_FINISH_LOADING)
+          console.log(store.dispatch, '2')
+          store.dispatch('setFinishLoading')
         }
         // check refresh token
         if (response && response.status == 401) {

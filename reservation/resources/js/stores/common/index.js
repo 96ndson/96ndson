@@ -29,15 +29,16 @@ const state = {
 }
 
 const getters = {
+  isLoading(state) {
+    return state.loading > 0
+  },
+
+
   accessToken(state) {
     return state.accessToken ? state.accessToken : localStorage.getItem('accessToken');
   },
   typeLogin(state) {
     return state.type_login ? state.type_login : localStorage.getItem('type_login');
-  },
-
-  isLoading(state) {
-    return state.loading > 0
   },
   error(state) {
     return state.error
@@ -54,15 +55,18 @@ const actions = {
   [ACTION_CLEAR_ERROR](context) {
     context.commit(CLEAR_ERROR);
   },
-  [ACTION_SET_LOADING](context) {
-    context.commit(SET_LOADING)
+
+
+  setLoading({commit}) {
+    commit('setIsLoading')
   },
-  [ACTION_FINISH_LOADING](context) {
-    context.commit(FINISH_LOADING)
+  setFinishLoading({commit}) {
+    commit('setFinishLoading')
   },
-  [ACTION_CLEAR_LOADING](context) {
-    context.commit(CLEAR_LOADING)
-  },
+
+
+
+
   [ACTION_SET_MESS](context, message) {
     context.commit(SET_MESSAGE, message)
   },
@@ -72,6 +76,21 @@ const actions = {
 }
 
 const mutations = {
+  setIsLoading(state) {
+    state.loading++
+  },
+
+  setFinishLoading(state) {
+    if (state.loading > 0) {
+      state.loading--
+    }
+  },
+  [CLEAR_LOADING](state) {
+    state.loading = 0
+  },
+
+
+
   [SET_TYPE_LOGIN](state, type) {
     state.type_login = type ? type : null
     if (type) {
@@ -89,17 +108,6 @@ const mutations = {
     }
   },
 
-  [SET_LOADING](state) {
-    state.loading++
-  },
-  [FINISH_LOADING](state) {
-    if (state.loading > 0) {
-      state.loading--
-    }
-  },
-  [CLEAR_LOADING](state) {
-    state.loading = 0
-  },
   [SET_MESSAGE](state, message) {
     state.message = message
   },

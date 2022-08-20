@@ -77,6 +77,7 @@
 <script>
 import {UserService} from '@/services';
 import EventBus from '@/plugins/eventBus'
+
 export default {
   name: "Login",
   data() {
@@ -103,13 +104,13 @@ export default {
         // 1.thông báo login thành công (toast)
 
         // 2.redirect trang home
-        this.$router.push({ name: 'home'})
+        this.$router.push({ name: 'home'}, () => {})
         // 3. lưu token vào cả vuex và cả localStorage để sau còn sử dung => truyền rất nhiều component
         this.$store.dispatch('actionSetToken', response.data.access_token)
         this.$store.dispatch('actionSetUser', response.data.user)
 
       }).catch(errors => {
-        // có thể xử lý dc
+
       })
     },
   },

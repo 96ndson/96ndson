@@ -17,11 +17,9 @@ const ApiService = {
   init() {
     const service = this
     Vue.use(VueAxios, axios)
-    //Vue.axios.defaults.baseURL = ''
-    // intercept every request
     Vue.axios.interceptors.request.use(
       (request) => {
-        const accessToken = store.getters.accessToken || localStorage.getItem('accessToken');
+        const accessToken = store.getters.getToken
         if (accessToken) {
           request.headers.common['Authorization'] = `Bearer ${accessToken}`;
         }

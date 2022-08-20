@@ -4,10 +4,16 @@ export default [
     name: 'login',
     component: () => import('@/pages/auth/Login'),
     meta: {
-      isPublic: true,
-      title: {
-        i18n: ''
-      },
+      isLogin: false,
+    },
+  },
+
+  {
+    path: '/profile',
+    name: 'profile',
+    component: () => import('@/pages/auth/Profile'),
+    meta: {
+      isLogin: true,
     },
   },
 ]

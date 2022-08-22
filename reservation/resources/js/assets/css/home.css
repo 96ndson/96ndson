@@ -195,6 +195,9 @@ body{
   text-decoration: none;
   background-color: var(--primary-color);
 }
+.nav-item{
+  cursor: pointer;
+}
 .nav-item-dropdown{
   position: relative;
 }

@@ -60,3 +60,6 @@ Route::group([
 Route::get('/time', [SettingController::class, 'index']);
 Route::get('/food', [FoodController::class, 'index']);
 Route::post('/add-reservation', [ReservationController::class, 'add_reservation']);
+Route::get('/show-reservation', [ReservationController::class, 'index']);
+Route::get('/delete-reservation/{id}', [ReservationController::class, 'delete_reservation']);
+Route::post('/edit-reservation/{id}', [ReservationController::class, 'edit_reservation']);

@@ -18,12 +18,11 @@ class CreateReservationsTable extends Migration
             $table->integer('shop_id');
             $table->integer('user_id');
             $table->integer('people');
-            $table->integer('children');
-            $table->integer('baby');
-            $table->string('style');
-            $table->date('date');
-            $table->time('time');
-            $table->softDeletes()->nullable()->default(null);
+            $table->integer('children')->nullable();
+            $table->integer('baby')->nullable();
+            $table->string('style')->nullable();
+            $table->json('date_time');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

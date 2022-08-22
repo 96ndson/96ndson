@@ -1,9 +1,11 @@
 <template>
   <div class="header d-flex justify-content-between">
     <div class="navbar-brand">
+      <router-link :to="{name : 'home'}">
       <img
         src="https://cdn0.tablecheck.com/shops/557ecc9ba0749e2a48003703/tc_header_images/md/DAZZLE_WD%E3%83%AD%E3%82%B4.png?1473998345"
         alt="">
+      </router-link>
     </div>
     <nav class="navbar navbar-expand-lg navbar-expand-sm ">
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -38,7 +40,7 @@
               <font-awesome-icon class="nav-icon" icon="utensils"/>
               My Reservations</a>
           </li>
-          <li class="nav-item" @click="logout" v-if="isLogin">
+          <li  class="nav-item" @click="logout" v-if="isLogin">
             <a class="nav-link">
               <font-awesome-icon class="nav-icon" icon="fa-solid fa-right-to-bracket" />
               Logout</a>
@@ -98,6 +100,7 @@
     name: "Header",
     data() {
       return {
+        isOpenNavMobile: false,
         isLogin: false
       }
     },
@@ -107,26 +110,23 @@
     methods: {
       profile() {
         console.log(1)
-        this.$router.push({ name: 'profile'}, () => {})
+        this.$router.push({ name: 'table_check'}, () => {})
       },
       login() {
         this.$router.push({ name: 'login'}, () => {})
       },
       logout() {
-        // clear token = call api
         UserService.logout().then(response => {
-          // 1.thông báo login thành công (toast)
-
-          // 2.redirect trang login
           this.$router.push({ name: 'login'}, () => {})
-
-          // 3. clear (vuex + localStorage)
           this.$store.dispatch('actionSetToken', '')
           this.$store.dispatch('actionSetUser', null)
         }).catch(errors => {
 
         })
-      }
+      },
+      closeNav() {
+        this.isOpenNavMobile = !this.isOpenNavMobile
+      },
     }
   }
 </script>

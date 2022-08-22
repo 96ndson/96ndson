@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import authRoute from '@/routers/auth'
+import tableCheck from '@/routers/table_check'
 import stores from '@/stores'
 import routers from '@/routers'
 
@@ -17,7 +18,8 @@ const routes = [
       isLogin: true
     },
   },
-  ...authRoute
+  ...authRoute,
+  ...tableCheck
 
 ]
 

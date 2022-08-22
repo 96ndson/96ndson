@@ -22,7 +22,7 @@ class CreateFoodTable extends Migration
             $table->text('description');
             $table->text('content');
             $table->integer('price');
-            $table->softDeletes()->nullable()->default(null);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

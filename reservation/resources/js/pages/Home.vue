@@ -119,7 +119,7 @@
                 <div class="btn-group d-lg-flex">
                   <label v-on:click="checkTableStyle(listTableStyles)"
                          v-for="(listTableStyles) in listTableStyle"
-                         :class="tableStyle === listTableStyles.value ? 'form-group-table-label-active' : 'form-group-table-label'">
+                         :class="tableStyle === listTableStyles.name ? 'form-group-table-label-active' : 'form-group-table-label'">
                     <input
                       class="radio_buttons optional"
                       :value="listTableStyles.value"
@@ -146,7 +146,6 @@
           </div>
         </div>
       </div>
-<!--      <button class="btn btn-primary btn-order" type="submit">Đặt lịch</button>-->
       </form>
       <div class="content2">
         <div class="row">
@@ -166,10 +165,10 @@
                   </div>
                   <div class="menu-item-content">
                     <div class="menu-item-content-desc">
-                      1
+                      {{food.content.slice(0,300)}}
                     </div>
                     <div class="menu-item-content-document" :class="!showreadMore ? '' : 'd-block' ">
-                      1
+                      {{food.content.slice(301)}}
                       <div class="menu-item-small">
                         Fine Print ※ The contents of the menu may change without prior notice depending on the market.
                         Please acknowledge it beforehand.<br>
@@ -186,7 +185,7 @@
                 <div class="col-sm-2 col-xs-7 pull-right group3">
                   <div class="menu-item-right">
                     <div class="menu-item-price row">
-                      <div class="menu-item-price-value">¥ 1</div>
+                      <div class="menu-item-price-value">¥ {{food.price}}</div>
                       <div class="menu-item-price-tax">(Tax Excl.)</div>
                     </div>
                     <div class="menu-item-select">
@@ -215,27 +214,7 @@
         </div>
       </div>
     </div>
-    <div class="footer">
-      <div class="container text-center">
-        <table class="footer-links">
-          <tbody>
-          <tr>
-            <td class="footer-list"><a class="footer-link" href="#">For Restaurants</a></td>
-            <td class="footer-list"><a class="footer-link" href="#">Terms of Service</a></td>
-            <td class="footer-list"><a class="footer-link" href="#">Privacy Policy</a></td>
-            <td class="footer-list"><a class="footer-link" href="#">Payment Policy</a></td>
-          </tr>
-          </tbody>
-        </table>
-        <div class="copyright">
-          <p>
-            Copyright ©
-            <a class="footer-link" href="">TableCheck Inc.</a>
-            All Rights Reserved.
-          </p>
-        </div>
-      </div>
-    </div>
+    <Footer/>
     <back-to-top bottom="50px" right="50px">
       <button type="button" class="btn btn-info btn-to-top">
         <div class="d-flex content-to-top">
@@ -249,18 +228,18 @@
 
 <script>
 import availability from "@/components/reservation/availability"
-import Header from "@/components/header/Header"
+import Header from "@/components/layout/Header"
+import Footer from "@/components/layout/Footer"
 import {Datetime} from 'vue-datetime'
 import moment from 'moment';
 import {workTime, listTableStyle} from '@/helpers/constant.js';
 import EventBus from '@/plugins/eventBus';
-import {FoodService,ReservationService} from '@/services'
+import {FoodService,ReservationService,SettingService} from '@/services'
 export default {
   name: "Home",
-  components: {availability, Header, datetime: Datetime},
+  components: {availability, Header, Footer, datetime: Datetime},
   data() {
     return {
-      isOpenNavMobile: false,
       isOpenCalendar: false,
       showreadMore: false,
       closereadMore: false,
@@ -280,31 +259,15 @@ export default {
         people : null,
         children : null,
         baby : null,
-        time :'',
-        date : '',
-        user_id : 1,
+        date_time : '',
+        user_id : null,
         shop_id : 1,
         style : null
       }
     }
   },
-  props: {
-    user:{
-      type: '',
-      default:null
-    }
-  },
   created(){
     this.getListFood()
-    EventBus.$on('getUser', (data) =>{
-      this.user = data;
-    });
-    if(localStorage.getItem('ACCESS_TOKEN')){
-      this.activeLogin = true
-    }
-  },
-  destroyed(){
-    EventBus.$off("getUser");
   },
   watch: {
     calendar() {
@@ -367,19 +330,18 @@ export default {
   methods: {
     submitFormReservation(date) {
       alert('Bạn có chắc chắn muốn đặt bàn không?')
-      let {form,user} = this;
+      let {form} = this;
+      form.user_id = this.$store.getters.getUser.id
       form.style = this.tableStyle;
-      form.date = '1'
+      form.date_time = JSON.stringify(date)
+      console.log(form)
       ReservationService.postReservation(form)
         .then((res) => {
-
+          this.$toast.success('Đặt lịch thành công')
         })
         .catch((error) => {
-
+          console.log(error)
         });
-    },
-    closeNav() {
-      this.isOpenNavMobile = !this.isOpenNavMobile
     },
     showCalendar(cc) {
       if (cc.open) {
@@ -402,7 +364,7 @@ export default {
       }
     },
     checkTableStyle(listTableStyles) {
-      this.tableStyle = listTableStyles.value;
+      this.tableStyle = listTableStyles.name;
     },
     async getListTime() {
       try {
@@ -415,7 +377,6 @@ export default {
         );
         for (let i = 0; i < response.data.length; i++) {
           let arr = JSON.parse(response.data[i].setting_time);
-          console.log(arr)
           for (let j = 0; j < arr.length; j++) {
             this.timePrev.push(
               response.data[i].date + ' ' + arr[j])
@@ -444,13 +405,5 @@ export default {
 
 .pull-right a {
   color: var(--primary-color);
-}
-.btn-order{
-  position: sticky;
-  top: 20px;
-  font-size: 1.6rem;
-  padding: 8px 16px;
-  text-transform: capitalize;
-  z-index: 1;
 }
 </style>

@@ -1,10 +1,18 @@
 import ApiService from './ApiService';
-import axios from 'axios';
 
 
 const ReservationService = {
   postReservation(data) {
-    return axios.post('http://reservation.test/api/add-reservation',data)
+    return ApiService.post('http://reservation.test/api/add-reservation', data)
+  },
+  getReservation(id) {
+    return ApiService.get('/api/show-reservation/?id=' + id)
+  },
+  deleteReservation(id) {
+    return ApiService.get(`/api/delete-reservation/${id}`)
+  },
+  editReservation(id,data) {
+    return ApiService.post(`/api/edit-reservation/${id}`,data)
   }
 }
 export default ReservationService

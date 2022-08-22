@@ -34,7 +34,11 @@
               <label class="form-label" for="form3Example3">Email</label>
               <input style="padding: 20px 20px;font-size: 1.4rem" v-model="form.email" type="text" id="form3Example3"
                      class="form-control form-control-lg"
-                     placeholder="Enter a valid email address"/>
+                     placeholder="Enter a valid email address"
+                     :class="{'is-error' : (!$v.form.email.required && $v.$dirty)}"/>
+              <div class="validate" v-if="$v.$dirty">
+                <span class="pt-1" v-if="!$v.form.email.required"> Vui lòng nhập email </span>
+              </div>
             </div>
 
             <!-- Password input -->
@@ -42,7 +46,10 @@
               <label class="form-label" for="form3Example4">Password</label>
               <input style="padding: 20px 20px;font-size: 1.4rem" v-model="form.password" type="password"
                      id="form3Example4" class="form-control form-control-lg"
-                     placeholder="Enter password"/>
+                     placeholder="Enter password" :class="{'is-error' : (!$v.form.password.required && $v.$dirty)}"/>
+              <div class="validate" v-if="$v.$dirty">
+                <span class="pt-1" v-if="!$v.form.password.required"> Vui lòng nhập password </span>
+              </div>
             </div>
 
             <div class="d-flex justify-content-between align-items-center">
@@ -50,7 +57,7 @@
               <div class="form-check mb-0">
                 <input style="margin-top: 5px" class="form-check-input me-2" type="checkbox" value=""
                        id="form2Example3"
-                      v-model="form.is_remember"
+                       v-model="form.is_remember"
                 />
                 <label class="form-check-label" for="form2Example3">
                   Remember me
@@ -77,6 +84,7 @@
 <script>
 import {UserService} from '@/services';
 import EventBus from '@/plugins/eventBus'
+import {required} from 'vuelidate/lib/validators';
 
 export default {
   name: "Login",
@@ -90,28 +98,44 @@ export default {
       errorValidate: '',
     }
   },
+  validations() {
+    return {
+      form:
+        {
+          email: {
+            required,
+          },
+          password: {
+            required,
+          }
+        }
+    }
+  },
   props: {
-    user:{
+    user: {
       type: Object,
-      default:null
+      default: null
     }
   },
   methods: {
-    handleSubmitLogin() {
-      UserService.login(this.form).then(response => {
-        // token, thông tin user (response.data)
+    async handleSubmitLogin() {
+      this.$v.$touch()
+      if (!this.$v.$invalid) {
+        let data = {
+          email: this.form.email,
+          password: this.form.password,
+        }
+        await UserService.login(data).then(response => {
+          this.$router.push({name: 'home'}, () => {
+          })
+          this.$toast.success('Đăng nhập thành công')
+          this.$store.dispatch('actionSetToken', response.data.access_token)
+          this.$store.dispatch('actionSetUser', response.data.user)
 
-        // 1.thông báo login thành công (toast)
-
-        // 2.redirect trang home
-        this.$router.push({ name: 'home'}, () => {})
-        // 3. lưu token vào cả vuex và cả localStorage để sau còn sử dung => truyền rất nhiều component
-        this.$store.dispatch('actionSetToken', response.data.access_token)
-        this.$store.dispatch('actionSetUser', response.data.user)
-
-      }).catch(errors => {
-
-      })
+        }).catch(err => {
+          this.$toast.error(err.data.message)
+        })
+      }
     },
   },
 
@@ -134,5 +158,14 @@ export default {
   .h-custom {
     height: 100%;
   }
+}
+
+.validate span {
+  color: red;
+  font-size: 1.4rem;
+}
+
+.is-error {
+  border: 1px solid red !important;
 }
 </style>

@@ -165,10 +165,10 @@
                   </div>
                   <div class="menu-item-content">
                     <div class="menu-item-content-desc">
-                      {{ food.content.slice(0, 300) }}
+                      {{ food.content ? food.content.slice(0, 300) : '' }}
                     </div>
                     <div class="menu-item-content-document" :class="!showreadMore ? '' : 'd-block' ">
-                      {{ food.content.slice(301) }}
+                      {{ food.content ? food.content.slice(301) : '' }}
                       <div class="menu-item-small">
                         Fine Print ※ The contents of the menu may change without prior notice depending on the market.
                         Please acknowledge it beforehand.<br>
@@ -232,8 +232,7 @@ import Header from "@/components/layout/Header"
 import Footer from "@/components/layout/Footer"
 import {Datetime} from 'vue-datetime'
 import moment from 'moment';
-import {workTime, listTableStyle, dateNow} from '@/helpers/constant.js';
-import EventBus from '@/plugins/eventBus';
+import {workTime, listTableStyle} from '@/helpers/constant.js';
 import {ShopService, FoodService, ReservationService, SettingService} from '@/services'
 
 export default {
@@ -353,7 +352,6 @@ export default {
         form.date = date
         form.time = time
         form.shop_id = this.food.shop_id || 1
-        console.log(form)
         ReservationService.addReservation(form)
           .then((res) => {
             this.$toast.success('Đặt lịch thành công')

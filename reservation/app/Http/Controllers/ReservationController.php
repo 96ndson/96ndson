@@ -25,15 +25,16 @@ class ReservationController extends Controller
         return $this->reservationRepository->getReservation($request->id);
     }
 
-    public function get_reservation(Request $request)
+
+    public function show_edit_reservation(Request $request)
     {
-        return $this->reservationRepository->getReservationByUserID($request->id);
+        return $this->reservationRepository->find($request->id);
     }
 
     public function delete_reservation($id)
     {
-        $test = $this->reservationRepository->findOrFail($id);
-        $this->reservationRepository->delete($test);
+        $reservation = $this->reservationRepository->findOrFail($id);
+        $this->reservationRepository->delete($reservation);
         return responseUpdatedOrDeleted();
     }
 

@@ -120,7 +120,7 @@ export default {
   props:{
     listShop:{
       type : Array,
-      default : []
+      default : null
     }
   },
   created() {

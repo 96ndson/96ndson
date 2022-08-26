@@ -16,6 +16,14 @@
             </div>
             <br>
             <div class="row">
+              <label class="col-md-3">Shop</label>
+              <select class="col-md-6 form-select" v-model="form.shop_id">
+                <option disabled value="">Lựa chọn shop</option>
+                <option :value="item.value" v-for="item in listShop">Shop {{item.name}}</option>
+              </select>
+            </div>
+            <br>
+            <div class="row">
               <label class="col-md-3">Tiêu đề</label>
               <input class="col-md-6" v-model="form.title" type="text" placeholder="Nhập tiêu đề">
             </div>
@@ -49,6 +57,7 @@
 </template>
 
 <script>
+import {listShop} from '@/helpers/constant.js';
 import {FoodService} from '@/services'
 export default {
   name: "AddFood",
@@ -58,11 +67,12 @@ export default {
         file_image :null,
         title:'',
         slug:'',
-        shop_id: 1,
+        shop_id: '',
         description:'',
         content:'',
         price:null
-      }
+      },
+      listShop:listShop
     }
   },
   methods:{

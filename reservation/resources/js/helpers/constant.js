@@ -43,10 +43,21 @@ const listTableStyle = [
     value: '6'
   },
 ]
+const listShop = [
+  {
+    name: 'Nguyễn Khánh Toàn',
+    value: '1'
+  },
+  {
+    name: 'Trần Nhân Tông',
+    value: '2'
+  },
+]
 
 export {
   dateTimeFormat,
   yearMonthFormat,
   workTime,
   listTableStyle,
+  listShop
 }

@@ -21,10 +21,6 @@ class ReservationRepository extends BaseRepository
         return $this->model->where('user_id', $id)->where('date', '>=', Carbon::now())->get();
     }
 
-    public function getReservationByUserID($id)
-    {
-        return $this->model->where('user_id', $id)->first();
-    }
 
     public function addReservation($request)
     {

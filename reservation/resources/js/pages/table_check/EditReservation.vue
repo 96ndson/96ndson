@@ -9,6 +9,14 @@
           <input :value="form.people" type="text" class="form-control">
         </div>
         <div class="form-group">
+          <label class="d-block">Shop</label>
+          <select class="form-select" v-model="form.shop_id">
+            <option :value="item.value" v-for="item in listShop" :selected="form.shop_id === item.value">Shop
+              {{ item.name }}
+            </option>
+          </select>
+        </div>
+        <div class="form-group">
           <label>Kiểu bàn</label>
           <input v-model="form.style" type="text" class="form-control">
         </div>
@@ -28,6 +36,7 @@
 
 <script>
 import Header from "@/components/layout/Header"
+import {listShop} from '@/helpers/constant.js';
 import {ReservationService} from '@/services'
 
 export default {
@@ -44,7 +53,8 @@ export default {
         user_id: null,
         shop_id: '',
         style: null
-      }
+      },
+      listShop: listShop
     }
   },
   created() {
@@ -52,7 +62,7 @@ export default {
   },
   methods: {
     editReservation() {
-      ReservationService.editReservation(this.form.id,this.form).then(response => {
+      ReservationService.editReservation(this.form.id, this.form).then(response => {
         this.$toast.success('Điều chỉnh thành công');
         this.$router.push({name: 'home'}, () => {
         })
@@ -61,7 +71,7 @@ export default {
       })
     },
     async getReservation() {
-      let repo = await ReservationService.getReservationByID(this.$store.getters.getUser.id)
+      let repo = await ReservationService.getReservationByID(this.$route.params.id)
       this.form = repo.data
     }
   }
@@ -76,6 +86,11 @@ export default {
 
 .form-control {
   padding: 20px 16px !important;
+  font-size: 14px !important;
+}
+
+.form-select {
+  padding: 10px 16px !important;
   font-size: 14px !important;
 }
 </style>

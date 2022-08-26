@@ -12,8 +12,9 @@
         </li>
       </ul>
     </div>
+    <AddFood v-if="optionActive==='Food'"/>
     <Profile v-if="optionActive==='Profile'"/>
-    <Reservation v-else :reservation="reservation"></Reservation>
+    <Reservation v-if="optionActive==='Reservation'" :reservations="reservations"></Reservation>
   </div>
 </template>
 
@@ -22,12 +23,13 @@ import Reservation from "@/components/table_check/Reservation"
 import Header from "@/components/layout/Header"
 import Profile from "@/pages/auth/Profile"
 import {ReservationService} from '@/services'
+import AddFood from "@/pages/table_check/AddFood"
 
 export default {
   name: "TableCheck",
   data() {
     return {
-      reservation: {},
+      reservations: [],
       optionActive: 'Reservation',
       listOption:[
         {
@@ -35,11 +37,14 @@ export default {
         },
         {
           name:'Profile'
+        },
+        {
+          name:'Food'
         }
       ]
     }
   },
-  components: {Header, Reservation, Profile},
+  components: {Header, Reservation, Profile, AddFood},
   created() {
 
     this.getReservation()
@@ -50,7 +55,7 @@ export default {
     },
     async getReservation() {
       let repo = await ReservationService.getReservation(this.$store.getters.getUser.id);
-      this.reservation = repo.data
+      this.reservations = repo.data
     }
   }
 }

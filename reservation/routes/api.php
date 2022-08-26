@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\FoodController;
+use App\Http\Controllers\ShopController;
 use App\Http\Controllers\ReservationController;
 
 /*
@@ -58,8 +59,12 @@ Route::group([
     Route::post('/login', [UserController::class, 'login']);
 });
 Route::get('/time', [SettingController::class, 'index']);
+Route::get('/get-reservation', [ReservationController::class, 'get_reservation']);
 Route::get('/food', [FoodController::class, 'index']);
+Route::get('/food-by-id', [FoodController::class, 'get_food_by_id']);
+Route::get('/shop', [ShopController::class, 'index']);
 Route::post('/add-reservation', [ReservationController::class, 'add_reservation']);
 Route::get('/show-reservation', [ReservationController::class, 'index']);
 Route::get('/delete-reservation/{id}', [ReservationController::class, 'delete_reservation']);
 Route::post('/edit-reservation/{id}', [ReservationController::class, 'edit_reservation']);
+Route::post('/add-food', [FoodController::class, 'add_food']);

@@ -21,7 +21,8 @@ class CreateReservationsTable extends Migration
             $table->integer('children')->nullable();
             $table->integer('baby')->nullable();
             $table->string('style')->nullable();
-            $table->json('date_time');
+            $table->string('time');
+            $table->date('date');
             $table->softDeletes();
             $table->timestamps();
         });

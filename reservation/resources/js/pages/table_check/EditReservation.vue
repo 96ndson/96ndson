@@ -6,15 +6,19 @@
       <form v-on:submit.prevent="editReservation">
         <div class="form-group">
           <label>Số người</label>
-          <input v-model="form.people" type="text" class="form-control">
+          <input :value="form.people" type="text" class="form-control">
         </div>
         <div class="form-group">
           <label>Kiểu bàn</label>
           <input v-model="form.style" type="text" class="form-control">
         </div>
         <div class="form-group">
-          <label>Thời gian</label>
-          <input v-model="form.date_time" type="text" class="form-control">
+          <label>Ngày</label>
+          <input v-model="form.date" type="text" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>Giờ</label>
+          <input v-model="form.time" type="text" class="form-control">
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>
@@ -35,9 +39,10 @@ export default {
         people: null,
         children: null,
         baby: null,
-        date_time: '',
+        date: '',
+        time: '',
         user_id: null,
-        shop_id: 1,
+        shop_id: '',
         style: null
       }
     }
@@ -48,13 +53,15 @@ export default {
   methods: {
     editReservation() {
       ReservationService.editReservation(this.form.id,this.form).then(response => {
-        this.$toast.success('Điều chỉnh thành công')
+        this.$toast.success('Điều chỉnh thành công');
+        this.$router.push({name: 'home'}, () => {
+        })
       }).catch(err => {
         this.$toast.error(err.data.message)
       })
     },
     async getReservation() {
-      let repo = await ReservationService.getReservation(this.$store.getters.getUser.id);
+      let repo = await ReservationService.getReservationByID(this.$store.getters.getUser.id)
       this.form = repo.data
     }
   }

@@ -13,19 +13,6 @@
         <div class="timetable-collapse">
           <table>
             <tbody>
-            <!--            <tr class="mobile_week_change"></tr>-->
-            <!--            <tr class="navTableMobile">-->
-            <!--              <td colspan="4">-->
-            <!--                <a v-on:click="prevWeek" class="prev-week next_prev_btn">-->
-            <!--                  <font-awesome-icon class="icon-time fa-2x" icon="fa-solid fa-angle-left"/>-->
-            <!--                </a>-->
-            <!--              </td>-->
-            <!--              <td colspan="4">-->
-            <!--                <a v-on:click="nextWeek" class="next-week next_prev_btn">-->
-            <!--                  <font-awesome-icon class="icon-time fa-2x" icon="fa-solid fa-chevron-right"/>-->
-            <!--                </a>-->
-            <!--              </td>-->
-            <!--            </tr>-->
             <tr>
               <th class="time-left-arrow" colspan="1">
                 <a v-on:click="prevWeek" class="prev-week next_prev_btn">
@@ -76,6 +63,7 @@
   </div>
 </template>
 <script>
+import moment from 'moment';
 export default {
   data() {
     return {
@@ -117,9 +105,9 @@ export default {
       }
     },
     selectTime(time) {
-      this.chooseTime = time.value;
-      this.$emit('submitFormReservation',this.chooseTime)
-      console.log(time.value)
+      let dateSelect = time.value.slice(0,10) > moment().format('YYYY-MM-DD') ? time.value.slice(0,10) : '';
+      let timeSelect = time.value.slice(10)
+      this.$emit('submitFormReservation',dateSelect,timeSelect)
     },
     nextWeek() {
       this.$emit('showWeek', 'next');

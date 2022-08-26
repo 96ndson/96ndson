@@ -2,9 +2,9 @@
   <div class="header d-flex justify-content-between">
     <div class="navbar-brand">
       <router-link :to="{name : 'home'}">
-      <img
-        src="https://cdn0.tablecheck.com/shops/557ecc9ba0749e2a48003703/tc_header_images/md/DAZZLE_WD%E3%83%AD%E3%82%B4.png?1473998345"
-        alt="">
+        <img
+          src="https://cdn0.tablecheck.com/shops/557ecc9ba0749e2a48003703/tc_header_images/md/DAZZLE_WD%E3%83%AD%E3%82%B4.png?1473998345"
+          alt="">
       </router-link>
     </div>
     <nav class="navbar navbar-expand-lg navbar-expand-sm ">
@@ -35,19 +35,31 @@
               </div>
             </div>
           </div>
+          <div class="nav-item nav-item-dropdown">
+            <div class=" dropdown show">
+              <a class="nav-link dropdown-toggle" href="#" role="button" id="dropdownShopLink" data-toggle="dropdown"
+                 aria-haspopup="true" aria-expanded="false">
+                <font-awesome-icon class="nav-icon" icon="earth-europe"/>
+                Shop
+              </a>
+              <div class="dropdown-menu dropdown-menu-header" aria-labelledby="dropdownShopLink">
+                <a class="dropdown-item" href="#" v-for="item in listShop" @click="getShop(item.id)">Cơ sở : {{item.name}}</a>
+              </div>
+            </div>
+          </div>
           <li class="nav-item" @click="profile">
             <a class="nav-link">
               <font-awesome-icon class="nav-icon" icon="utensils"/>
               My Reservations</a>
           </li>
-          <li  class="nav-item" @click="logout" v-if="isLogin">
+          <li class="nav-item" @click="logout" v-if="isLogin">
             <a class="nav-link">
-              <font-awesome-icon class="nav-icon" icon="fa-solid fa-right-to-bracket" />
+              <font-awesome-icon class="nav-icon" icon="fa-solid fa-right-to-bracket"/>
               Logout</a>
           </li>
           <li class="nav-item" @click="login" v-else>
             <a class="nav-link">
-              <font-awesome-icon class="nav-icon" icon="fa-solid fa-right-to-bracket" />
+              <font-awesome-icon class="nav-icon" icon="fa-solid fa-right-to-bracket"/>
               Login</a>
           </li>
         </ul>
@@ -78,7 +90,7 @@
             <li class="dropdown-item-mobile">Italiano</li>
           </ul>
         </li>
-        <li><a class="nav-link-mobile" href="javascript:void(0)"  @click="profile" id="myBtn">
+        <li><a class="nav-link-mobile" href="javascript:void(0)" @click="profile" id="myBtn">
           <font-awesome-icon class="nav-icon" icon="utensils"/>
           My Reservation</a></li>
         <li><a class="nav-link-mobile" href="#">
@@ -94,41 +106,58 @@
 </template>
 
 <script>
-  import {UserService} from '@/services';
+import {UserService} from '@/services';
 
-  export default {
-    name: "Header",
-    data() {
-      return {
-        isOpenNavMobile: false,
-        isLogin: false
-      }
+export default {
+  name: "Header",
+  data() {
+    return {
+      isOpenNavMobile: false,
+      isLogin: false,
+      shop:''
+    }
+  },
+  props:{
+    listShop:{
+      type : Array,
+      default : []
+    }
+  },
+  created() {
+    this.isLogin = this.$store.getters.getToken || false
+  },
+  watch:{
+    shop(){
+      this.$emit('getFoodByID',this.shop);
+    }
+  },
+  methods: {
+    profile() {
+      this.$router.push({name: 'table_check'}, () => {
+      })
     },
-    created() {
-      this.isLogin = this.$store.getters.getToken || false
+    login() {
+      this.$router.push({name: 'login'}, () => {
+      })
     },
-    methods: {
-      profile() {
-        console.log(1)
-        this.$router.push({ name: 'table_check'}, () => {})
-      },
-      login() {
-        this.$router.push({ name: 'login'}, () => {})
-      },
-      logout() {
-        UserService.logout().then(response => {
-          this.$router.push({ name: 'login'}, () => {})
-          this.$store.dispatch('actionSetToken', '')
-          this.$store.dispatch('actionSetUser', null)
-        }).catch(errors => {
-
+    logout() {
+      UserService.logout().then(response => {
+        this.$router.push({name: 'login'}, () => {
         })
-      },
-      closeNav() {
-        this.isOpenNavMobile = !this.isOpenNavMobile
-      },
+        this.$store.dispatch('actionSetToken', '')
+        this.$store.dispatch('actionSetUser', null)
+      }).catch(errors => {
+
+      })
+    },
+    closeNav() {
+      this.isOpenNavMobile = !this.isOpenNavMobile
+    },
+    getShop(shop){
+      this.shop = shop;
     }
   }
+}
 </script>
 
 <style scoped>

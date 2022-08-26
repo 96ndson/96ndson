@@ -17,20 +17,15 @@ class ReservationController extends Controller
 
     public function add_reservation(ValidationReservation $request)
     {
-        $requestData = $request->only([
-            'shop_id',
-            'user_id',
-            'people',
-            'children',
-            'baby',
-            'style',
-            'date_time',
-        ]);
-        $test = $this->reservationRepository->create($requestData);
-        return responseCreated($test);
+        $this->reservationRepository->addReservation($request);
     }
 
     public function index(Request $request)
+    {
+        return $this->reservationRepository->getReservation($request->id);
+    }
+
+    public function get_reservation(Request $request)
     {
         return $this->reservationRepository->getReservationByUserID($request->id);
     }
@@ -44,7 +39,7 @@ class ReservationController extends Controller
 
     public function edit_reservation($id, ValidationReservation $request)
     {
-        $test = $this->reservationRepository->findOrFail($id);
+        $reservation = $this->reservationRepository->findOrFail($id);
         $requestData = $request->only([
             'shop_id',
             'user_id',
@@ -54,7 +49,7 @@ class ReservationController extends Controller
             'style',
             'date_time',
         ]);
-        $this->reservationRepository->update($test, $requestData);
-        return responseUpdatedOrDeleted();
+        $edit = $this->reservationRepository->update($reservation, $requestData);
+        return responseUpdatedOrDeleted($edit);
     }
 }
